@@ -5,7 +5,8 @@
     <img alt="stars" src="https://img.shields.io/github/stars/vaibhav-75007/TimathonCodeJamOct?style=social"/>
     <img alt="stars" src="https://img.shields.io/github/watchers/vaibhav-75007/TimathonCodeJamOct?style=social"/>
 </p>
-This is the repository that will be used in the Tech with Tim code jam from october 2020, the [Timathon](https://twtcodejam.net).
+
+This is the repository that will be used in the Tech with Tim code jam from october 2020, the [Timathon](https://twtcodejam.net/)
 The **theme** of the Theme Jam was **"students"**
 
 ### License
