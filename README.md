@@ -29,9 +29,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ```
 ### Contributors
-|  | Name | Social media links |
-|--|------|--------------------|
-|🇮🇳| vaibhav-75007 | [GitHub](https://github.com/vaibhav-75007) |
-|🇪🇸| dqtvictory | [GitHub](https://github.com/dqtvictory) |
-|🇮🇳| Alfred-Reji | [GitHub](https://github.com/Alfred-Reji) |
-|🇬🇧| cpp-maker| [GitHub](https://github.com/cpp-maker) |
+| Name | Social media links |
+|------|--------------------|
+| vaibhav-75007 | [GitHub](https://github.com/vaibhav-75007) |
+| dqtvictory | [GitHub](https://github.com/dqtvictory) |
+| Alfred-Reji | [GitHub](https://github.com/Alfred-Reji) |
+| cpp-maker| [GitHub](https://github.com/cpp-maker) |
