@@ -32,6 +32,6 @@ limitations under the License.
 |  | Name | Social media links |
 |--|------|--------------------|
 |🇮🇳| vaibhav-75007 | [GitHub](https://github.com/vaibhav-75007) |
-|🇪🇸| PabloCorbCon | [GitHub](https://github.com/PabloCorbCon) |
+|🇪🇸| dqtvictory | [GitHub](https://github.com/dqtvictory) |
 |🇮🇳| Alfred-Reji | [GitHub](https://github.com/Alfred-Reji) |
 |🇬🇧| cpp-maker| [GitHub](https://github.com/cpp-maker) |
