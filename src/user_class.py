@@ -1,4 +1,4 @@
-class User(object):
+class User():
 
     def __init__(self,name,productivity_score,task_completion_rate,deadlines_missed,week_productivity_score,week_task_completion_rate,week_deadline_missed ):
         self.name = name
