@@ -1,4 +1,4 @@
-class FlashCard(object):
+class FlashCard():
 
     def __init__(self, subject, front_text,back_text):
         self.subject = subject
