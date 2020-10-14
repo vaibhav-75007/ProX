@@ -2,9 +2,11 @@
 import sys
 import os
 import InfoDialog
+import flashcard_class as flash
+import user_class as user
 
 
-from PySide2.QtWidgets import QApplication, QMainWindow, QAction, QMenu
+from PySide2.QtWidgets import QApplication, QMainWindow, QAction, QMenu, QGridLayout, QPushButton, QWidget
 from PySide2.QtCore import QFile
 from PySide2.QtUiTools import QUiLoader
 
@@ -14,6 +16,16 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
         self.load_ui()
         self.setFixedSize(1200,800)
+        self.centralWidget = QWidget()
+        self.setCentralWidget(self.centralWidget)
+
+        self.layout = QGridLayout(self.centralWidget)
+
+        self.users = [user.User("Test",4,3,4,5,4,3),user.User("Test1",3,6,43,5,3,3),user.User("Test2",3,2,5,4,3,5),user.User("Test3",3,2,5,4,3,5),user.User("Test4",3,2,5,4,3,5),user.User("Test5",3,2,5,4,3,5)]
+        self.leaderboard = user.LeaderBoard(self.users,self)
+        self.layout.addWidget(self.leaderboard,0,0,1,1)
+
+        self.setLayout(self.layout)
         self.menu = self.menuBar()
         self.initMenu()
 
