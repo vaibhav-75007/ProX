@@ -14,3 +14,6 @@ class FlashCard():
     def change_back_text(self,text):
         self.back_text = text
 
+#create __widget__() method to cast to a widget
+#create flashcardwidget class for custom flashcard widget
+#use qstackedwidget to store flashcards
