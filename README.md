@@ -1,4 +1,4 @@
-<h1 align="center">TimathonCodeJam</h1>
+<h1 align="center">ProX</h1>
 <p align="center"><img alt="Hex.pm" src="https://img.shields.io/hexpm/l/plug?color=green&label=LICENSE"></p>
 <p align="center">
     <img alt="forks" src="https://img.shields.io/github/forks/vaibhav-75007/TimathonCodeJamOct?label=Forks&style=social"/>
