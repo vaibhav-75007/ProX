@@ -4,6 +4,8 @@ import os
 import InfoDialog
 import flashcard_class as flash
 import user_class as user
+import Task as task
+from datetime import datetime
 
 
 from PySide2.QtWidgets import QApplication, QMainWindow, QAction, QMenu, QGridLayout, QPushButton, QWidget
@@ -24,6 +26,10 @@ class MainWindow(QMainWindow):
         self.users = [user.User("Test",4,3,4,5,4,3),user.User("Test1",3,6,43,5,3,3),user.User("Test2",3,2,5,4,3,5),user.User("Test3",3,2,5,4,3,5),user.User("Test4",3,2,5,4,3,5),user.User("Test5",3,2,5,4,3,5)]
         self.leaderboard = user.LeaderBoard(self.users,self)
         self.layout.addWidget(self.leaderboard,0,0,1,1)
+
+        self.tasks = [task.Task(datetime.now(),"test","test"),task.Task(datetime.now(),"test1","test1"),task.Task(datetime.now(),"test2","test2"),task.Task(datetime.now(),"test3","test3"),task.Task(datetime.now(),"test4","test4")]
+        self.todo = task.ToDoList(self.tasks)
+        self.layout.addWidget(self.todo,0,1,1,1)
 
         self.setLayout(self.layout)
         self.menu = self.menuBar()
