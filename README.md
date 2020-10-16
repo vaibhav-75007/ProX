@@ -7,7 +7,7 @@
 </p>
 
 This is the repository that will be used in the Tech with Tim code jam from october 2020, the [Timathon](https://twtcodejam.net/)
-The **theme** of the Code Jam was **"students"**
+The **theme** of the Code Jam was **"for students"**
 
 ### License
 This open source project is under the Apache 2.0 license, you can read it in the [LICENSE](https://github.com/vaibhav-75007/TimathonCodeJamOct/blob/main/LICENSE) file of this repository.
