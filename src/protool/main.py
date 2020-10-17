@@ -55,6 +55,9 @@ class MainWindow(QMainWindow):
         self.menu = self.menuBar()
         self.initMenu()
 
+        self.taskInputField.add.connect(self.todo.addTask)
+        self.taskInputField.done.stateChanged.connect(self.taskInputField.createTask)
+
     def initMenu(self): #set up the menu bar, with File, syllabi and leaderboard
         self.filemenu = self.menu.addMenu("&File")
         self.syllabimenu = self.menu.addMenu("&Syllabi")
