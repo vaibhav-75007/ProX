@@ -42,11 +42,14 @@ class MainWindow(QMainWindow):
 
         self.layout.addItem(self.spacer,0,2,1,1)
 
-        self.tasks = [task.Task(datetime.now(),"test","test",True),task.Task(datetime.now(),"test1","test1",False),task.Task(datetime.now(),"test2","test2",False),task.Task(datetime.now(),"test3","test3",True),task.Task(datetime.now(),"test4","test4",False)]
+        self.tasks = [task.Task(datetime.now(),"test","test"),task.Task(datetime.now(),"test1","test1"),task.Task(datetime.now(),"test2","test2"),task.Task(datetime.now(),"test3","test3"),task.Task(datetime(2020,12,3),"test4","test4")]
         self.todo = task.ToDoList(self.tasks)
         self.layout.addWidget(self.todo,0,3,1,1)
 
         self.layout.addItem(self.spacer1,0,4,1,1)
+
+        self.taskInputField = task.TaskInputFieldWidget()
+        self.layout.addWidget(self.taskInputField,1,3,1,1)
 
         self.setLayout(self.layout)
         self.menu = self.menuBar()
