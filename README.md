@@ -34,4 +34,4 @@ limitations under the License.
 | vaibhav-75007 | [GitHub](https://github.com/vaibhav-75007) |
 | dqtvictory | [GitHub](https://github.com/dqtvictory) |
 | Alfred-Reji | [GitHub](https://github.com/Alfred-Reji) |
-| cpp-maker| [GitHub](https://github.com/cpp-maker) |
+| vision-05| [GitHub](https://github.com/vision-05) |
