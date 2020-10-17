@@ -1,4 +1,5 @@
 from PySide2.QtWidgets import QListWidgetItem, QListWidget
+from PySide2.QtGui import QColor, QBrush, QPalette
 
 class User():
 
@@ -72,6 +73,12 @@ class UserListItem(QListWidgetItem):
 
         self.user = user
 
+        brush = QBrush(QColor.fromRgbF(0.4,0.4,0.4))
+        self.setBackground(brush)
+
+        text = QBrush(QColor.fromRgbF(0.9,0.9,0.9,1))
+        self.setForeground(text)
+
     def getProScore(self):
         return self.user.productivity_score
 
@@ -83,5 +90,13 @@ class LeaderBoard(QListWidget):
         super(LeaderBoard,self).__init__(parent=parent,*args,**kwargs)
         for user in users:
             self.addItem(UserListItem(user))
+
+        self.setBackgroundRole(QPalette.Window)
+
+        palette = QPalette()
+        palette.setBrush(QPalette.Window,QBrush(QColor.fromRgbF(0.3,0.3,0.3,1)))
+
+        self.setPalette(palette)
+        self.setAutoFillBackground(True)
 
         self.show()
