@@ -8,9 +8,10 @@ import Task as task
 from datetime import datetime
 
 
-from PySide2.QtWidgets import QApplication, QMainWindow, QAction, QMenu, QGridLayout, QPushButton, QWidget
+from PySide2.QtWidgets import QApplication, QMainWindow, QAction, QMenu, QGridLayout, QPushButton, QWidget, QSpacerItem
 from PySide2.QtCore import QFile
 from PySide2.QtUiTools import QUiLoader
+from PySide2.QtGui import QBrush, QColor, QPalette
 
 
 class MainWindow(QMainWindow):
@@ -19,17 +20,33 @@ class MainWindow(QMainWindow):
         self.load_ui()
         self.setFixedSize(1200,800)
         self.centralWidget = QWidget()
+
+        self.centralWidget.setBackgroundRole(QPalette.Window)
+
+        palette = QPalette()
+        palette.setBrush(QPalette.Window,QBrush(QColor.fromRgbF(0.3,0.3,0.3,1)))
+
+        self.centralWidget.setPalette(palette)
+        self.centralWidget.setAutoFillBackground(True)
+
         self.setCentralWidget(self.centralWidget)
+
+        self.spacer = QSpacerItem(100,100)
+        self.spacer1 = QSpacerItem(100,100)
 
         self.layout = QGridLayout(self.centralWidget)
 
         self.users = [user.User("Test",4,3,4,5,4,3),user.User("Test1",3,6,43,5,3,3),user.User("Test2",3,2,5,4,3,5),user.User("Test3",3,2,5,4,3,5),user.User("Test4",3,2,5,4,3,5),user.User("Test5",3,2,5,4,3,5)]
         self.leaderboard = user.LeaderBoard(self.users,self)
-        self.layout.addWidget(self.leaderboard,0,0,1,1)
+        self.layout.addWidget(self.leaderboard,0,0,1,2)
 
-        self.tasks = [task.Task(datetime.now(),"test","test"),task.Task(datetime.now(),"test1","test1"),task.Task(datetime.now(),"test2","test2"),task.Task(datetime.now(),"test3","test3"),task.Task(datetime.now(),"test4","test4")]
+        self.layout.addItem(self.spacer,0,2,1,1)
+
+        self.tasks = [task.Task(datetime.now(),"test","test",True),task.Task(datetime.now(),"test1","test1",False),task.Task(datetime.now(),"test2","test2",False),task.Task(datetime.now(),"test3","test3",True),task.Task(datetime.now(),"test4","test4",False)]
         self.todo = task.ToDoList(self.tasks)
-        self.layout.addWidget(self.todo,0,1,1,1)
+        self.layout.addWidget(self.todo,0,3,1,1)
+
+        self.layout.addItem(self.spacer1,0,4,1,1)
 
         self.setLayout(self.layout)
         self.menu = self.menuBar()
