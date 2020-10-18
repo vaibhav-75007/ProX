@@ -13,6 +13,37 @@ from PySide2.QtCore import QFile
 from PySide2.QtUiTools import QUiLoader
 from PySide2.QtGui import QBrush, QColor, QPalette
 
+qss = """
+QMenuBar {
+    color: white;
+    background-color: gray;
+}
+
+QMenuBar::item::selected {
+    background-color: #AAAAAA;
+}
+
+QMenu {
+    background-color: #ABABAB;
+}
+
+QMenu::item {
+    background-color: #AAAAAA;
+    color: white;
+}
+
+QMenu::item:selected {
+    background-color: #AAAAAA;
+}
+
+QListWidget {
+    background-color: #777777;
+}
+
+QListWidget::item::selected {
+    background-color: #993399;
+}
+"""
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -23,10 +54,11 @@ class MainWindow(QMainWindow):
 
         self.centralWidget.setBackgroundRole(QPalette.Window)
 
-        palette = QPalette()
-        palette.setBrush(QPalette.Window,QBrush(QColor.fromRgbF(0.3,0.3,0.3,1)))
+        self.palette = QPalette()
+        self.palette.setBrush(QPalette.Window,QBrush(QColor.fromRgbF(0.3,0.3,0.3,1)))
+        self.palette.setBrush(QPalette.Text,QBrush(QColor.fromRgbF(0.9,0.9,0.9,1)))
 
-        self.centralWidget.setPalette(palette)
+        self.centralWidget.setPalette(self.palette)
         self.centralWidget.setAutoFillBackground(True)
 
         self.setCentralWidget(self.centralWidget)
@@ -106,6 +138,7 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication([])
+    app.setStyleSheet(qss)
     widget = MainWindow()
     widget.show()
     sys.exit(app.exec_())
