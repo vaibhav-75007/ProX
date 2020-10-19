@@ -1,5 +1,5 @@
 # This Python file uses the following encoding: utf-8
-from PySide2.QtWidgets import QListWidgetItem, QListWidget, QCheckBox, QWidget, QHBoxLayout, QFormLayout, QLabel, QSpinBox, QLineEdit
+from PySide2.QtWidgets import QListWidgetItem, QListWidget, QCheckBox, QWidget, QHBoxLayout, QFormLayout, QLabel, QSpinBox, QLineEdit, QPushButton
 from PySide2.QtGui import QColor, QBrush, QLinearGradient, QPalette
 from PySide2.QtCore import Signal, Slot
 from datetime import datetime
@@ -62,14 +62,41 @@ class ToDoList(QListWidget):
         for task in self.tasks:
             self.addItem(TaskWidget(task))
 
+        self.checkBoxes = []
+
         for i in range(self.count()):
-            self.setItemWidget(self.item(i), QCheckBox()) #add a checkbox to make complete
+            self.checkBoxes.append(QCheckBox())
+            self.checkBoxes[i].stateChanged.connect(self.removeTask)
+            self.setItemWidget(self.item(i), self.checkBoxes[i]) #add a checkbox to make complete
 
         self.show()
 
     def sortTasks(self,tasks):
         tasks.sort(key=lambda t: t.deadline)
         return tasks
+
+    def removeTask(self):
+        index = -1
+        for i in range(len(self.checkBoxes)):
+            if self.checkBoxes[i].isChecked() == True:
+                index = i
+
+        if index == -1:
+            return
+
+        print(index)
+        print("List len: " + str(self.count()))
+        print("Checkboxes len: " + str(len(self.checkBoxes)))
+        print("Tasks len: " + str(len(self.tasks)))
+        self.takeItem(index)
+        self.checkBoxes.pop(index)
+        self.tasks.pop(index)
+
+        for i in range(self.count()):
+            self.checkBoxes[i].stateChanged.connect(self.removeTask)
+
+        print("Finished")
+        return
 
     @Slot(Task)
     def addTask(self,task):
@@ -83,12 +110,15 @@ class ToDoList(QListWidget):
                 item = self.takeItem(i)
 
         self.tasks = self.sortTasks(self.tasks)
+        self.checkBoxes.clear()
 
         for task in self.tasks:
             self.addItem(TaskWidget(task))
 
         for i in range(self.count()):
-            self.setItemWidget(self.item(i), QCheckBox())
+            self.checkBoxes.append(QCheckBox())
+            self.setItemWidget(self.item(i), self.checkBoxes[i])
+            self.checkBoxes[i].stateChanged.connect(self.removeTask)
 
 class TaskInputFieldWidget(QWidget):
     add = Signal(Task)
@@ -137,7 +167,7 @@ class TaskInputFieldWidget(QWidget):
         self.layout.addRow(self.descriptionLabel,self.descriptionInput)
         self.layout.addRow(self.deadlineLabel,self.deadlineInputLayout)
 
-        self.done = QCheckBox()
+        self.done = QPushButton()
         self.mainlayout.addWidget(self.done)
         self.mainlayout.addLayout(self.layout)
         self.setLayout(self.mainlayout)
@@ -148,10 +178,6 @@ class TaskInputFieldWidget(QWidget):
         return datetime(self.deadlineInputYear.value(),self.deadlineInputMonth.value(),self.deadlineInputDay.value())
 
     def createTask(self):
-        if self.done.checkState() == False:
-            return
-
-        self.done.setChecked(False)
         task = Task(self.inputToDate(),self.nameInput.text(),self.descriptionInput.text())
         self.nameInput.clear()
         self.descriptionInput.clear()
