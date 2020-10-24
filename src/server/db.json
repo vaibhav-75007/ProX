@@ -1,0 +1,52 @@
+{
+    "users": [
+        {
+            "id": 1,
+            "name": "John Doe",
+            "task_completion_rate": 1,
+            "missed_deadline": 1,
+            "weekly_productivity_score": 1,
+            "weekly_task_completion_rate": 1,
+            "weekly_deadlines_missed_attributes": 1,
+            "tasks": [
+                1,
+                2,
+                3
+            ],
+            "flashcards": [
+                1,
+                2,
+                3
+            ],
+            "curriculums": [
+                1,
+                2,
+                3
+            ]
+        }
+    ],
+    "tasks": [
+        {
+            "id": 1,
+            "name": "some task",
+            "description": "something",
+            "deadline": datetime
+        }
+    ],
+    "flashcard": [
+        {
+            "id": 1,
+            "subject": "some subject",
+            "front_text": "front",
+            "back_text": "back"
+        }
+    ],
+    "curriculums": [
+        {
+            "id": 1,
+            "name": "Something",
+            "subject": "some subject",
+            "topics": ["topic 1", "topic 2"]
+        }
+    ]
+}
