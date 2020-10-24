@@ -49,7 +49,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.load_ui()
-        self.setFixedSize(1200,700)
+        self.setFixedSize(1200,800)
         self.centralWidget = QWidget()
 
         self.centralWidget.setBackgroundRole(QPalette.Window)
