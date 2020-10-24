@@ -36,7 +36,7 @@ class TaskWidget(QListWidgetItem):
 
         self.task = task
 
-        self.text = '\t' + self.task.name + '\n\t' + str(self.task.getDeadline()) + '\n\t' + self.task.description
+        self.text = f'\t{self.task.getDeadline().year}/{self.task.getDeadline().month}/{self.task.getDeadline().day}\n\t{self.task.name}\n\t{self.task.description}'
 
         self.setText(self.text)
 
