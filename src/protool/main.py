@@ -95,11 +95,11 @@ class MainWindow(QMainWindow):
         self.syllabimenu = self.menu.addMenu("&Syllabi")
         self.leaderboardmenu = self.menu.addMenu("&Leader Board")
 
-        self.about = QAction("About App", self) #get info about the app
-        self.exit = QAction("Exit", self) #exit the app
-        self.view = QAction("View Syllabi", self) #view the syllabi window
-        self.hideSyllabi = QAction("Hide Syllabi", self) #hide the syllabi widget
-        self.showSyllabi = QAction("Show Syllabi", self) #show the syllabi widget
+        self.about = QAction("About App",self) #get info about the app
+        self.exit = QAction("Exit",self) #exit the app
+        self.view = QAction("View Syllabi",self) #view the syllabi window
+        self.hideSyllabi = QAction("Hide Syllabi",self) #hide the syllabi widget
+        self.showSyllabi = QAction("Show Syllabi",self) #show the syllabi widget
 
         self.about.triggered.connect(self.info)
         self.exit.triggered.connect(sys.exit)
