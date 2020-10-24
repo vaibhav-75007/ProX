@@ -20,28 +20,35 @@ QMenuBar {
 }
 
 QMenuBar::item::selected {
-    background-color: #AAAAAA;
-}
-
-QMenu {
     background-color: #ABABAB;
 }
 
+QMenu {
+    background-color: gray;
+}
+
 QMenu::item {
-    background-color: #AAAAAA;
+    background-color: gray;
     color: white;
 }
 
-QMenu::item:selected {
-    background-color: #AAAAAA;
+QMenu::item::selected {
+    background-color: #ABABAB;
 }
-
 QListWidget {
     background-color: #777777;
 }
 
 QListWidget::item::selected {
     background-color: #993399;
+}
+
+QStackedWidget {
+    background-color: gray;
+}
+
+QLabel {
+    color: white;
 }
 """
 
@@ -90,28 +97,38 @@ class MainWindow(QMainWindow):
         self.taskInputField.add.connect(self.todo.addTask)
         self.taskInputField.done.released.connect(self.taskInputField.createTask)
 
+        self.setWindowTitle("ProX")
+
     def initMenu(self): #set up the menu bar, with File, syllabi and leaderboard
         self.filemenu = self.menu.addMenu("&File")
         self.syllabimenu = self.menu.addMenu("&Syllabi")
         self.leaderboardmenu = self.menu.addMenu("&Leader Board")
+        self.flashcardmenu = self.menu.addMenu("&Flashcards")
 
         self.about = QAction("About App",self) #get info about the app
         self.exit = QAction("Exit",self) #exit the app
         self.view = QAction("View Syllabi",self) #view the syllabi window
         self.hideSyllabi = QAction("Hide Syllabi",self) #hide the syllabi widget
         self.showSyllabi = QAction("Show Syllabi",self) #show the syllabi widget
+        self.openFlashcards = QAction("View Flashcards",self)
 
         self.about.triggered.connect(self.info)
         self.exit.triggered.connect(sys.exit)
         self.view.triggered.connect(self.openSyllabiWindow)
         self.hideSyllabi.triggered.connect(self.hideSyllabiWidget)
         self.showSyllabi.triggered.connect(self.showSyllabiWidget)
+        self.openFlashcards.triggered.connect(self.showFlashcards)
 
         self.filemenu.addAction(self.about)
         self.filemenu.addAction(self.exit)
         self.syllabimenu.addAction(self.view)
         self.syllabimenu.addAction(self.hideSyllabi)
         self.syllabimenu.addAction(self.showSyllabi)
+        self.flashcardmenu.addAction(self.openFlashcards)
+
+    def showFlashcards(self):
+        self.flashcards = flash.FlashCardWindow([flash.FlashCard("Math","2 + 2","4"),flash.FlashCard("Physics","Force","Mass x Acceleration"),flash.FlashCard("Comp Sci","Function","Returns a value")])
+        self.flashcards.show()
 
     def load_ui(self):
         loader = QUiLoader()
