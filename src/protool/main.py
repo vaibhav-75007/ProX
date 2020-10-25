@@ -14,6 +14,39 @@ from PySide2.QtUiTools import QUiLoader
 from PySide2.QtGui import QBrush, QColor, QPalette
 
 qss = """
+QScrollBar {
+    background-color: #AAAAAA;
+    color: #ABABAB;
+}
+
+QMainWindow {
+    background-color: #555555;
+}
+
+QLineEdit {
+    background-color: #ABABAB;
+    color: white;
+}
+
+QSpinBox {
+    background-color: #ABABAB;
+    color: white;
+}
+
+QDialog {
+    background-color: #555555;
+}
+
+QPushButton {
+    background-color: #ABABAB;
+    color: white;
+}
+
+QPlainTextEdit {
+    background-color: #555555;
+    color: white;
+}
+
 QMenuBar {
     color: white;
     background-color: gray;
@@ -58,15 +91,6 @@ class MainWindow(QMainWindow):
         self.load_ui()
         self.setFixedSize(1200,800)
         self.centralWidget = QWidget()
-
-        self.centralWidget.setBackgroundRole(QPalette.Window)
-
-        self.palette = QPalette()
-        self.palette.setBrush(QPalette.Window,QBrush(QColor.fromRgbF(0.3,0.3,0.3,1)))
-        self.palette.setBrush(QPalette.Text,QBrush(QColor.fromRgbF(0.9,0.9,0.9,1)))
-
-        self.centralWidget.setPalette(self.palette)
-        self.centralWidget.setAutoFillBackground(True)
 
         self.setCentralWidget(self.centralWidget)
 

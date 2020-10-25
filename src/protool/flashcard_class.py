@@ -1,4 +1,4 @@
-from PySide2.QtWidgets import QStackedWidget, QLabel, QPushButton, QGridLayout, QMainWindow, QWidget, QVBoxLayout, QFormLayout, QHBoxLayout, QLineEdit, QGridLayout
+from PySide2.QtWidgets import QStackedWidget, QLabel, QPushButton, QGridLayout, QMainWindow, QWidget, QVBoxLayout, QFormLayout, QHBoxLayout, QLineEdit, QGridLayout, QMenu, QAction
 from PySide2.QtGui import QPalette, QBrush, QColor
 from PySide2.QtCore import Qt
 
@@ -52,6 +52,7 @@ class FlashCardWidget(QWidget):
 class FlashCardWindow(QMainWindow):
     def __init__(self,flashcards,*args,**kwargs):
         super(FlashCardWindow,self).__init__(*args,**kwargs)
+
         self.index = 0
         self.maxIndex = 0
 
@@ -83,8 +84,32 @@ class FlashCardWindow(QMainWindow):
 
         self.stack.show()
 
+        self.initMenu()
+
         self.setFixedSize(800,600)
         self.setWindowTitle("Flashcards")
+
+    def initMenu(self):
+        self.menu = self.menuBar()
+        self.file = self.menu.addMenu("&File")
+        self.edit = self.menu.addMenu("&Edit")
+        self.view = self.menu.addMenu("&View")
+
+        self.about = QAction("About",self)
+        self.close = QAction("Close Window",self)
+        self.create = QAction("Create Flashcard",self)
+        self.delete = QAction("Delete Flashcard",self)
+        self.deleteSet = QAction("Delete Flashcard Set",self)
+        self.addSet = QAction("Create Flashcard Set",self)
+        self.changeSet = QAction("View Flashcard Set",self)
+
+        self.file.addAction(self.about)
+        self.file.addAction(self.close)
+        self.edit.addAction(self.create)
+        self.edit.addAction(self.addSet)
+        self.edit.addAction(self.delete)
+        self.edit.addAction(self.deleteSet)
+        self.view.addAction(self.changeSet)
 
     def nextCard(self):
         self.flip.released.disconnect(self.stack.widget(self.index).flip)

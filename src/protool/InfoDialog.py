@@ -7,7 +7,7 @@ class InfoDialog(QDialog):
         super(InfoDialog,self).__init__(*args,**kwargs)
         #initialise the parent QDialog
         self.text = QPlainTextEdit(self) #create a text edit to show the about section
-        self.text.setPlainText("About this app:\nCreated by:")
+        self.text.setPlainText("About this app: a productivity tool with pomodoro timer, todo list, leaderboard and more to make productivity competitive\nCreated by:\nvision-05\nMartian\ndemigod\ndqtvictory\nalfred")
 
         self.dialog = QDialogButtonBox(QDialogButtonBox.Ok)
         self.dialog.accepted.connect(self.close) #create a button to close the dialog
