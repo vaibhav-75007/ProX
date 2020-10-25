@@ -16,4 +16,3 @@ class InfoDialog(QDialog):
         self.layout.addWidget(self.text)
         self.layout.addWidget(self.dialog)
         self.setLayout(self.layout) #set everythin in a vertical layout
-
