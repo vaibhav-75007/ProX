@@ -1,4 +1,4 @@
-from PySide2.QtWidgets import QStackedWidget, QLabel, QPushButton, QGridLayout, QMainWindow, QWidget, QVBoxLayout, QFormLayout, QHBoxLayout, QLineEdit
+from PySide2.QtWidgets import QStackedWidget, QLabel, QPushButton, QGridLayout, QMainWindow, QWidget, QVBoxLayout, QFormLayout, QHBoxLayout, QLineEdit, QGridLayout
 from PySide2.QtGui import QPalette, QBrush, QColor
 from PySide2.QtCore import Qt
 
@@ -40,21 +40,46 @@ class FlashCardWidget(QWidget):
         self.show()
 
     def flip(self):
+        print("Flipped")
+        print(self.label.text())
         if self.flipped == False:
             self.label.setText(self.flashcard.back_text)
+            self.flipped = True
             return
         self.label.setText(self.flashcard.front_text)
+        self.flipped = False
 
 class FlashCardWindow(QMainWindow):
     def __init__(self,flashcards,*args,**kwargs):
         super(FlashCardWindow,self).__init__(*args,**kwargs)
+        self.index = 0
+        self.maxIndex = 0
+
+        self.centralWidget = QWidget(self)
+        self.setCentralWidget(self.centralWidget)
+        self.layout = QGridLayout(self.centralWidget)
+        self.setLayout(self.layout)
 
         self.stack = QStackedWidget(self)
-
-        self.setCentralWidget(self.stack)
+        self.next = QPushButton("Next",self)
+        self.flip = QPushButton("Flip",self)
 
         for flashcard in flashcards:
             self.stack.addWidget(FlashCardWidget(flashcard))
+            self.index += 1
+            self.maxIndex += 1
+
+        self.maxIndex -= 1
+        self.index -= 1
+
+        self.stack.setCurrentIndex(self.index)
+
+        self.flip.released.connect(self.stack.currentWidget().flip)
+        self.next.released.connect(self.nextCard)
+
+        self.layout.addWidget(self.stack,0,0,2,2)
+        self.layout.addWidget(self.flip,1,0,1,1)
+        self.layout.addWidget(self.next,1,1,1,1)
 
         self.stack.show()
 
@@ -62,7 +87,15 @@ class FlashCardWindow(QMainWindow):
         self.setWindowTitle("Flashcards")
 
     def nextCard(self):
-       pass
+        self.flip.released.disconnect(self.stack.widget(self.index).flip)
+
+        if self.index > 0:
+            self.index -= 1
+        else:
+            self.index = self.maxIndex
+
+        self.stack.setCurrentIndex(self.index)
+        self.flip.released.connect(self.stack.widget(self.index).flip)
 
 class FlashCardCreateWindow(QMainWindow):
     def __init__(self,*args,**kwargs):
