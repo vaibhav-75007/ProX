@@ -2,7 +2,7 @@
 from PySide2.QtWidgets import QListWidgetItem, QListWidget, QCheckBox, QWidget, QHBoxLayout, QFormLayout, QLabel, QSpinBox, QLineEdit, QPushButton
 from PySide2.QtGui import QColor, QBrush, QLinearGradient, QPalette
 from PySide2.QtCore import Signal, Slot
-from datetime import datetime
+import datetime
 
 
 class Task:
@@ -15,12 +15,12 @@ class Task:
         self.isOverdue = False
         self.priority = False
 
-        now = datetime.now()
+        now = datetime.datetime.now()
 
         if now > deadline:
             self.isOverdue = True
 
-        if datetime(now.year,now.month,now.day + 7) > deadline:
+        if deadline - datetime.datetime(now.year,now.month,now.day) < datetime.timedelta(days=7):
             self.priority = True
 
     def getDeadline(self):
@@ -146,6 +146,9 @@ class TaskInputFieldWidget(QWidget):
         self.deadlineInputDay.setMaximum(31)
         self.deadlineInputDay.setMinimum(1)
 
+        self.deadlineInputMonth.valueChanged.connect(self.changeDateMaximum)
+        self.deadlineInputYear.valueChanged.connect(self.changeDateMaximum)
+
         self.deadlineLabelYear = QLabel("<font color=white>YYYY</font>")
         self.deadlineLabelMonth = QLabel("<font color=white>MM</font>")
         self.deadlineLabelDay = QLabel("<font color=white>DD</font>")
@@ -175,11 +178,23 @@ class TaskInputFieldWidget(QWidget):
 
         self.show()
 
+    def changeDateMaximum(self):
+        value = 31
+        month = self.deadlineInputMonth.value()
+        year = self.deadlineInputYear.value()
+        if month == 2 and year % 4 != 0:
+            value = 28
+        elif month == 2 and year % 4 == 0:
+            value = 29
+        elif month == 4 or month == 6 or month == 9 or month == 11:
+            value = 30
+        self.deadlineInputDay.setMaximum(value)
+
     def inputToDate(self):
-        return datetime(self.deadlineInputYear.value(),self.deadlineInputMonth.value(),self.deadlineInputDay.value())
+        return datetime.datetime(self.deadlineInputYear.value(),self.deadlineInputMonth.value(),self.deadlineInputDay.value())
 
     def createTask(self):
-        task = Task(self.inputToDate(),self.nameInput.text(),self.descriptionInput.text())
+        task = Task(self.inputToDate(),self.nameInput.text(),self.descriptionInput.text(),5)
         self.nameInput.clear()
         self.descriptionInput.clear()
         self.deadlineInputYear.setValue(datetime.now().year)

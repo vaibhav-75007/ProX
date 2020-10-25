@@ -75,13 +75,13 @@ class MainWindow(QMainWindow):
 
         self.layout = QGridLayout(self.centralWidget)
 
-        self.users = [user.User("Test",4,3,4,5,4,3),user.User("Test1",3,6,43,5,3,3),user.User("Test2",3,2,5,4,3,5),user.User("Test3",3,2,5,4,3,5),user.User("Test4",3,2,5,4,3,5),user.User("Test5",3,2,5,4,3,5)]
+        self.users = [user.User("Test",4,3,4,5,4,3,1),user.User("Test1",3,6,43,5,3,3,2),user.User("Test2",3,2,5,4,3,5,3),user.User("Test3",3,2,5,4,3,5,4),user.User("Test4",3,2,5,4,3,5,5),user.User("Test5",3,2,5,4,3,5,6)]
         self.leaderboard = user.LeaderBoard(self.users,self)
         self.layout.addWidget(self.leaderboard,0,0,1,2)
 
         self.layout.addItem(self.spacer,0,2,1,1)
 
-        self.tasks = [task.Task(datetime.now(),"test","test"),task.Task(datetime.now(),"test1","test1"),task.Task(datetime.now(),"test2","test2"),task.Task(datetime.now(),"test3","test3"),task.Task(datetime(2020,12,3),"test4","test4")]
+        self.tasks = [task.Task(datetime.now(),"test","test",1),task.Task(datetime.now(),"test1","test1",2),task.Task(datetime.now(),"test2","test2",3),task.Task(datetime.now(),"test3","test3",4),task.Task(datetime(2020,12,3),"test4","test4",5)]
         self.todo = task.ToDoList(self.tasks)
         self.layout.addWidget(self.todo,0,3,1,1)
 
@@ -127,7 +127,7 @@ class MainWindow(QMainWindow):
         self.flashcardmenu.addAction(self.openFlashcards)
 
     def showFlashcards(self):
-        self.flashcards = flash.FlashCardWindow([flash.FlashCard("Math","2 + 2","4"),flash.FlashCard("Physics","Force","Mass x Acceleration"),flash.FlashCard("Comp Sci","Function","Returns a value")])
+        self.flashcards = flash.FlashCardWindow([flash.FlashCard("Math","2 + 2","4",1),flash.FlashCard("Physics","Force","Mass x Acceleration",2),flash.FlashCard("Comp Sci","Function","Returns a value",3)])
         self.flashcards.show()
 
     def load_ui(self):
