@@ -197,7 +197,7 @@ class TaskInputFieldWidget(QWidget):
         task = Task(self.inputToDate(),self.nameInput.text(),self.descriptionInput.text(),5)
         self.nameInput.clear()
         self.descriptionInput.clear()
-        self.deadlineInputYear.setValue(datetime.now().year)
+        self.deadlineInputYear.setValue(datetime.datetime.now().year)
         self.deadlineInputMonth.setValue(datetime.now().month)
         self.deadlineInputDay.setValue(datetime.now().day)
 
