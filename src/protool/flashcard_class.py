@@ -3,7 +3,8 @@ from PySide2.QtGui import QPalette, QBrush, QColor
 from PySide2.QtCore import Qt
 
 class FlashCard():
-    def __init__(self, subject, front_text,back_text):
+    def __init__(self, subject, front_text,back_text,idNo):
+        self.id = idNo
         self.subject = subject
         self.front_text = front_text
         self.back_text = back_text

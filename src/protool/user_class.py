@@ -2,8 +2,8 @@ from PySide2.QtWidgets import QListWidgetItem, QListWidget
 from PySide2.QtGui import QColor, QBrush, QPalette
 
 class User():
-
-    def __init__(self,name,productivity_score,task_completion_rate,deadlines_missed,week_productivity_score,week_task_completion_rate,week_deadline_missed ):
+    def __init__(self,name,productivity_score,task_completion_rate,deadlines_missed,week_productivity_score,week_task_completion_rate,week_deadline_missed,idNo):
+        self.id = idNo
         self.name = name
         self.productivity_score = productivity_score
         self.task_completion_rate = task_completion_rate

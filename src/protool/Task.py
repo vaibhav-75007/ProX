@@ -6,7 +6,8 @@ from datetime import datetime
 
 
 class Task:
-    def __init__(self,deadline,name,description):
+    def __init__(self,deadline,name,description,idNo):
+        self.id = idNo
         self.deadline = deadline
         self.name = name
         self.description = description
