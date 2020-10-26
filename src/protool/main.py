@@ -151,8 +151,13 @@ class MainWindow(QMainWindow):
         self.flashcardmenu.addAction(self.openFlashcards)
 
     def showFlashcards(self):
-        self.flashcards = flash.FlashCardWindow([flash.FlashCard("Math","2 + 2","4",1),flash.FlashCard("Physics","Force","Mass x Acceleration",2),flash.FlashCard("Comp Sci","Function","Returns a value",3)])
-        self.flashcards.show()
+        self.makeFlashCardWindows([flash.FlashCard("Math","2 + 2","4",1),flash.FlashCard("Physics","Force","Mass x Acceleration",2),flash.FlashCard("Comp Sci","Function","Returns a value",3),flash.FlashCard("Math","3","3",4)])
+
+    def makeFlashCardWindows(self,flashcards):
+        self.flashcardWindows = []
+        flashcardsNew = flash.sortFlashcards(flashcards)
+        for section in range(len(flashcardsNew)):
+            self.flashcardWindows.append(flash.FlashCardWindow(flashcardsNew,section))
 
     def load_ui(self):
         loader = QUiLoader()

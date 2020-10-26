@@ -1,6 +1,7 @@
 from PySide2.QtWidgets import QStackedWidget, QLabel, QPushButton, QGridLayout, QMainWindow, QWidget, QVBoxLayout, QFormLayout, QHBoxLayout, QLineEdit, QGridLayout, QMenu, QAction
 from PySide2.QtGui import QPalette, QBrush, QColor
-from PySide2.QtCore import Qt
+from PySide2.QtCore import Qt, Signal, Slot
+import copy
 
 class FlashCard():
     def __init__(self, subject, front_text,back_text,idNo):
@@ -40,8 +41,6 @@ class FlashCardWidget(QWidget):
         self.show()
 
     def flip(self):
-        print("Flipped")
-        print(self.label.text())
         if self.flipped == False:
             self.label.setText(self.flashcard.back_text)
             self.flipped = True
@@ -49,9 +48,36 @@ class FlashCardWidget(QWidget):
         self.label.setText(self.flashcard.front_text)
         self.flipped = False
 
+class SubjectSwitchAction(QAction):
+    def __init__(self,index,*args,**kwargs):
+        super(SubjectSwitchAction,self).__init__(*args,**kwargs)
+
+        self.index = index
+
+def sortFlashcards(flashcards):
+    subjects = []
+    for flashcard in flashcards:
+        if flashcard.subject not in subjects:
+            subjects.append(flashcard.subject)
+
+            flashcardsNew = copy.deepcopy(subjects)
+
+    temp = []
+    for i in range(len(subjects)):
+        temp = []
+        for flashcard in flashcards:
+            if flashcard.subject == subjects[i]:
+                temp.append(flashcard)
+
+        flashcardsNew[i] = temp
+
+    return flashcardsNew
+
 class FlashCardWindow(QMainWindow):
-    def __init__(self,flashcards,*args,**kwargs):
+    def __init__(self,flashcards,index,*args,**kwargs):
         super(FlashCardWindow,self).__init__(*args,**kwargs)
+
+        self.flashcards = flashcards
 
         self.index = 0
         self.maxIndex = 0
@@ -65,17 +91,8 @@ class FlashCardWindow(QMainWindow):
         self.next = QPushButton("Next",self)
         self.flip = QPushButton("Flip",self)
 
-        for flashcard in flashcards:
-            self.stack.addWidget(FlashCardWidget(flashcard))
-            self.index += 1
-            self.maxIndex += 1
+        self.setStack(index)
 
-        self.maxIndex -= 1
-        self.index -= 1
-
-        self.stack.setCurrentIndex(self.index)
-
-        self.flip.released.connect(self.stack.currentWidget().flip)
         self.next.released.connect(self.nextCard)
 
         self.layout.addWidget(self.stack,0,0,2,2)
@@ -87,13 +104,26 @@ class FlashCardWindow(QMainWindow):
         self.initMenu()
 
         self.setFixedSize(800,600)
-        self.setWindowTitle("Flashcards")
+        self.setWindowTitle(self.flashcards[index][0].subject + " Flashcards")
+        self.show()
+
+    def setStack(self,index):
+        self.index = 0
+        for flashcard in self.flashcards[index]:
+            self.stack.addWidget(FlashCardWidget(flashcard))
+            self.index += 1
+            self.maxIndex += 1
+
+        self.maxIndex -= 1
+        self.index -= 1
+
+        self.stack.setCurrentIndex(self.index)
+        self.flip.released.connect(self.stack.currentWidget().flip)
 
     def initMenu(self):
         self.menu = self.menuBar()
         self.file = self.menu.addMenu("&File")
         self.edit = self.menu.addMenu("&Edit")
-        self.view = self.menu.addMenu("&View")
 
         self.about = QAction("About",self)
         self.close = QAction("Close Window",self)
@@ -101,7 +131,6 @@ class FlashCardWindow(QMainWindow):
         self.delete = QAction("Delete Flashcard",self)
         self.deleteSet = QAction("Delete Flashcard Set",self)
         self.addSet = QAction("Create Flashcard Set",self)
-        self.changeSet = QAction("View Flashcard Set",self)
 
         self.file.addAction(self.about)
         self.file.addAction(self.close)
@@ -109,7 +138,9 @@ class FlashCardWindow(QMainWindow):
         self.edit.addAction(self.addSet)
         self.edit.addAction(self.delete)
         self.edit.addAction(self.deleteSet)
-        self.view.addAction(self.changeSet)
+
+    def disconnectStackCard(self):
+        self.flip.released.disconnect(self.stack.widget(self.index).flip)
 
     def nextCard(self):
         self.flip.released.disconnect(self.stack.widget(self.index).flip)
