@@ -13,6 +13,20 @@ from PySide2.QtCore import QFile
 from PySide2.QtUiTools import QUiLoader
 from PySide2.QtGui import QBrush, QColor, QPalette
 
+"""
+Create dialog to create flashcards, delete flashcards
+Create separate dialog to create a new set of flashcards or delete a set of flashcards
+Create a widget to show curriculums
+Create dialog to create curriculums
+Create dialog to remove curriculums
+Alter colors of gui elements
+Use icons for buttons
+Create installer application
+Write data into json
+Send data to db
+"""
+
+
 qss = """
 QScrollBar {
     background-color: #AAAAAA;
@@ -121,6 +135,8 @@ class MainWindow(QMainWindow):
         self.taskInputField.add.connect(self.todo.addTask)
         self.taskInputField.done.released.connect(self.taskInputField.createTask)
 
+        self.flashcards = [flash.FlashCard("Math","2 + 2","4",1),flash.FlashCard("Physics","Force","Mass x Acceleration",2),flash.FlashCard("Comp Sci","Function","Returns a value",3),flash.FlashCard("Math","3","3",4)]
+
         self.setWindowTitle("ProX")
 
     def initMenu(self): #set up the menu bar, with File, syllabi and leaderboard
@@ -151,13 +167,36 @@ class MainWindow(QMainWindow):
         self.flashcardmenu.addAction(self.openFlashcards)
 
     def showFlashcards(self):
-        self.makeFlashCardWindows([flash.FlashCard("Math","2 + 2","4",1),flash.FlashCard("Physics","Force","Mass x Acceleration",2),flash.FlashCard("Comp Sci","Function","Returns a value",3),flash.FlashCard("Math","3","3",4)])
+        self.makeFlashCardWindows(self.flashcards)
+
+    def inputFlashcardInfo(self):
+        self.creator = flash.FlashCardCreateWindow()
+        self.creator.show()
+        self.creator.done.released.connect(self.makeNewFlashcard)
+
+    def makeNewFlashcard(self):
+        if self.creator.subjectInput.text() == "" or self.creator.frontInput.text() == "" or self.creator.backInput.text() == "":
+            return
+
+        self.flashcards.append(flash.FlashCard(self.creator.subjectInput.text(),self.creator.frontInput.text(),self.creator.backInput.text(),1))
+        for flashcardWindow in self.flashcardWindows:
+            flashcardWindow.create.triggered.disconnect(self.inputFlashcardInfo)
+
+        self.creator.subjectInput.clear()
+        self.creator.frontInput.clear()
+        self.creator.backInput.clear()
+
+        self.flashcardWindows.clear()
+        self.makeFlashCardWindows(self.flashcards)
 
     def makeFlashCardWindows(self,flashcards):
         self.flashcardWindows = []
         flashcardsNew = flash.sortFlashcards(flashcards)
         for section in range(len(flashcardsNew)):
             self.flashcardWindows.append(flash.FlashCardWindow(flashcardsNew,section))
+
+        for flashcardWindow in self.flashcardWindows:
+            flashcardWindow.create.triggered.connect(self.inputFlashcardInfo)
 
     def load_ui(self):
         loader = QUiLoader()

@@ -48,12 +48,6 @@ class FlashCardWidget(QWidget):
         self.label.setText(self.flashcard.front_text)
         self.flipped = False
 
-class SubjectSwitchAction(QAction):
-    def __init__(self,index,*args,**kwargs):
-        super(SubjectSwitchAction,self).__init__(*args,**kwargs)
-
-        self.index = index
-
 def sortFlashcards(flashcards):
     subjects = []
     for flashcard in flashcards:
@@ -135,7 +129,6 @@ class FlashCardWindow(QMainWindow):
         self.file.addAction(self.about)
         self.file.addAction(self.close)
         self.edit.addAction(self.create)
-        self.edit.addAction(self.addSet)
         self.edit.addAction(self.delete)
         self.edit.addAction(self.deleteSet)
 
@@ -157,7 +150,10 @@ class FlashCardCreateWindow(QMainWindow):
     def __init__(self,*args,**kwargs):
         super(FlashCardCreateWindow,self).__init__(*args,**kwargs)
 
-        self.layout = QVBoxLayout()
+        self.centralWidget = QWidget()
+        self.setCentralWidget(self.centralWidget)
+
+        self.layout = QVBoxLayout(self.centralWidget)
         self.front = FlashCardSideView()
         self.back = FlashCardSideView()
         self.form = QFormLayout()
@@ -166,10 +162,12 @@ class FlashCardCreateWindow(QMainWindow):
 
         self.lineEditLayout = QFormLayout()
         self.inputLayout = QHBoxLayout()
+        self.subjectInput = QLineEdit()
         self.frontInput = QLineEdit()
         self.backInput = QLineEdit()
         self.done = QPushButton()
 
+        self.lineEditLayout.addRow(QLabel("Subject:"),self.subjectInput)
         self.lineEditLayout.addRow(QLabel("Front:"),self.frontInput)
         self.lineEditLayout.addRow(QLabel("Back:"),self.backInput)
 
@@ -180,6 +178,7 @@ class FlashCardCreateWindow(QMainWindow):
         self.layout.addLayout(self.inputLayout)
 
         self.setLayout(self.layout)
+        self.show()
 
 class FlashCardSideView(QWidget):
     def __init__(self,*args,**kwargs):
