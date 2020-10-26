@@ -23,6 +23,14 @@ class Task:
         if deadline - datetime.datetime(now.year,now.month,now.day) < datetime.timedelta(days=7):
             self.priority = True
 
+    def __dict__(self):
+        return {
+                "id":idNo,
+                "name":self.name,
+                "description":self.description,
+                "deadline":self.deadline
+               }
+
     def getDeadline(self):
         return self.deadline
 
