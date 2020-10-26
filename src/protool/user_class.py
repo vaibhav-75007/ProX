@@ -11,6 +11,18 @@ class User():
         self.week_productivity_score = week_productivity_score
         self.week_task_completion_rate = week_task_completion_rate
         self.week_deadline_missed = week_deadline_missed
+
+    def __dict__(self):
+        return {
+                "id":self.idNo,
+                "name":self.name,
+                "productivityScore":self.productivity_score,
+                "taskCompletionRate":self.task_completion_rate,
+                "deadlinesMissed":self.deadlines_missed,
+                "weekProductivityScore":self.week_productivity_score,
+                "weekTaskCompletionRate":self.week_task_completion_rate,
+                "weekDeadlineMissed":self.week_deadline_missed
+               }
     
     def change_name(self,string):
         self.name =string 
