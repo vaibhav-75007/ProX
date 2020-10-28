@@ -105,7 +105,10 @@ def recover():
     """
     # If DB is not loaded into memory (i.e. idling), load DB first
     if not server.DBLoaded:
+        server.LoadDB()
+        
     data = request.get_json(force = True, silent = True)
+    
     try:
         email = data["email"]
         pin = data["pin"]
