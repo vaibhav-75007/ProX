@@ -103,6 +103,8 @@ def recover():
     """
     Recover a user object from the email address and PIN number
     """
+    # If DB is not loaded into memory (i.e. idling), load DB first
+    if not server.DBLoaded:
     data = request.get_json(force = True, silent = True)
     try:
         email = data["email"]
