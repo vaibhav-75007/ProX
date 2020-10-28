@@ -1,0 +1,75 @@
+[
+    {
+        "id": 1,
+        "name": "John Doe",
+        "email": "john@gmail.com",
+        "pin": 123456,
+        "task_completion_rate": 1,
+        "missed_deadline": 1,
+        "weekly_productivity_score": 1,
+        "weekly_task_completion_rate": 1,
+        "weekly_deadlines_missed": 1,
+        "tasks": [
+            {
+                "name": "task 1",
+                "description": "something",
+                "deadline": "2020/10/30 23:59:59 YY/mm/dd HH:MM:SS format"
+            },
+            {
+                "name": "task 2",
+                "description": "something",
+                "deadline": "2020/10/30 23:59:59 YY/mm/dd HH:MM:SS format"
+            }
+        ],
+        "flashcards": [
+            {
+                "subject": "some subject",
+                "front_text": "front",
+                "back_text": "back"
+            },
+            {
+                "subject": "some subject",
+                "front_text": "front",
+                "back_text": "back"
+            }
+        ],
+        "curriculums": [
+            {
+                "name": "Something",
+                "subject": "some subject",
+                "topics": [
+                    "topic 1",
+                    "topic 2"
+                ]
+            },
+            {
+                "name": "Some other thing",
+                "subject": "some subject",
+                "topics": [
+                    "topic 1",
+                    "topic 2"
+                ]
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Bill Gates",
+        "email": "bill@microsoft.com",
+        "pin": 654321,
+        "task_completion_rate": 1,
+        "missed_deadline": 1,
+        "weekly_productivity_score": 1,
+        "weekly_task_completion_rate": 1,
+        "weekly_deadlines_missed": 1,
+        "tasks": [
+            null
+        ],
+        "flashcards": [
+            null
+        ],
+        "curriculums": [
+            null
+        ]
+    }
+]
