@@ -6,7 +6,7 @@ import flashcard_class as flash
 import user_class as user
 import Task as task
 from datetime import datetime
-
+import FirstTimeWidget as first
 
 from PySide2.QtWidgets import QApplication, QMainWindow, QAction, QMenu, QGridLayout, QPushButton, QWidget, QSpacerItem
 from PySide2.QtCore import QFile
@@ -102,6 +102,10 @@ QLabel {
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
+        if os.path.exists("data.json") == False:
+            loginWindow = first.FirstTimewindow()
+            loginWindow.exec_()
+
         self.load_ui()
         self.setFixedSize(1200,800)
         self.centralWidget = QWidget()

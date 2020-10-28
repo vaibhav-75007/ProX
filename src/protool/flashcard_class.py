@@ -12,10 +12,9 @@ class FlashCard():
 
     def __dict__(self):
         return {
-                "id":self.idNo,
                 "subject":self.subject,
-                "frontText":self.front_text,
-                "backText":self.back_text
+                "front_text":self.front_text,
+                "back_text":self.back_text
                }
 
     def change_subject(self, text):

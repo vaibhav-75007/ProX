@@ -25,7 +25,6 @@ class Task:
 
     def __dict__(self):
         return {
-                "id":idNo,
                 "name":self.name,
                 "description":self.description,
                 "deadline":self.deadline
