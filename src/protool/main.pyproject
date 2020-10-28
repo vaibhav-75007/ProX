@@ -1,3 +1,3 @@
 {
-    "files": ["InfoDialog.py","form.ui","flashcard_class.py","main.py","user_class.py","LeaderboardWindow.py","Task.py"]
+    "files": ["InfoDialog.py","LeaderboardWindow.py","flashcard_class.py","jsonUtil.py","main.py","form.ui","Task.py","user_class.py","FirstTimeWidget.py"]
 }

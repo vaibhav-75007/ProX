@@ -16,12 +16,12 @@ class User():
         return {
                 "id":self.idNo,
                 "name":self.name,
-                "productivityScore":self.productivity_score,
-                "taskCompletionRate":self.task_completion_rate,
-                "deadlinesMissed":self.deadlines_missed,
-                "weekProductivityScore":self.week_productivity_score,
-                "weekTaskCompletionRate":self.week_task_completion_rate,
-                "weekDeadlineMissed":self.week_deadline_missed
+                "productivity_core":self.productivity_score,
+                "task_completion_rate":self.task_completion_rate,
+                "deadlines_missed":self.deadlines_missed,
+                "week_productivity_score":self.week_productivity_score,
+                "week_task_completion_rate":self.week_task_completion_rate,
+                "week_deadline_missed":self.week_deadline_missed
                }
     
     def change_name(self,string):
