@@ -1,58 +1,42 @@
 import threading
-import json
+from time import sleep
+from Database import DB
 
 class Server:
-    def __init__(self, IPAddress, Port, DBPath):
-        self.IPAddress = IPAddress  # Server's IP address
-        self.Port = Port  # Server's port
-        self.DBPath = DBPath  # Path to the JSON file containing the app's database
-        self.IdleTimer = 0  # Timer to unload data from memory
+    def __init__(self, db_path, idle=3600):
+        self.DBPath = db_path  # Path to the JSON file containing the app's database
+        
+        # Attributes for the idle timer
+        self.TimerThread = threading.Thread(target=self.IdleTimer, daemon=True)
+        self.Idle = idle
+        self.Countdown = idle
+        self.DBLoaded = False
 
-        # Dictionaries containing classes' data from the main app. Key: unique id, value: json-like dicts containing data
-        self.Users = dict()
-        self.Tasks = dict()
-        self.Flashcards = dict()
-
-    def run(self):
-        """Start the server. Wait for request. Count idle time"""
-        pass
+        self.TimerThread.start()
     
-    def load_db(self):
-        """Load up the database from file into memory"""
-        pass
+    def LoadDB(self):
+        """
+        Load the database from JSON file into memory
+        """
+        self.DB = DB(self.DBPath)
+        self.DBLoaded = True
 
-    def update_db(self, **kwargs):
-        """Update a field"""
-        pass
+    def UnloadDB(self):
+        """
+        Save the database to JSON and unload it from memory
+        """
+        self.DB.SaveDB()
+        del self.DB
+        self.DBLoaded = False
 
-    def unload_db(self):
-        """Save the database to JSON and unload it from memory"""
-        pass
-
-    def count_idle_time(self, timeout):
-        """Increase IdleTimer every second"""
-        pass
-
-    def add_user(self):
-        """Add user from the database into Users dict"""
-        pass
-
-    def add_task(self):
-        """Add task from the database into Tasks dict"""
-        pass
-
-    def add_flashcard(self):
-        """Add flashcard from the database into Flashcards dict"""
-        pass
-
-    def parse_request(self, message):
-        """Treat the request message accordingly"""
-        pass
-
-    def compose_response(self, **kwargs):
-        """Compose a response to be sent to client. Returns the composed message"""
-        pass
-
-    def respond(self, message):
-        """Send back the response message"""
-        pass
+    def IdleTimer(self):
+        """
+        Decrease Countdown attribute every second
+        """
+        while True:
+            if self.DBLoaded and self.Countdown > 0:
+                sleep(1)
+                self.Countdown -= 1
+            elif self.Countdown == 0:
+                self.UnloadDB()
+                self.Countdown = self.Idle
