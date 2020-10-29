@@ -43,7 +43,7 @@ def get_everyone(user_id, pin):
         if user["id"] != user_id:
             continue # Skip the user that is requesting
         adding = user.copy()
-        del adding["id"], adding["pin"], adding["email"]. # Remove sensitive data
+        del adding["id"], adding["pin"], adding["email"] # Remove sensitive data
         users.append(adding)
     return users, status.HTTP_200_OK
 
