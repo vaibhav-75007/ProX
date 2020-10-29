@@ -10,6 +10,7 @@ from datetime import datetime
 import FirstTimeWidget as first
 import jsonUtil as js
 import requests
+import copy
 
 from PySide2.QtWidgets import QApplication, QMainWindow, QAction, QMenu, QGridLayout, QPushButton, QWidget, QSpacerItem
 from PySide2.QtCore import QFile
@@ -106,11 +107,22 @@ def ping():
     r = requests.get('http://0.0.0.0:54321/')
     print(r.status_code)
 
+def testOnline():
+    try:
+        for i in range(5):
+            ping()
+        return True
+    except requests.exceptions.ConnectionError:
+        print("could not connect to server")
+        return False
+
 class MainWindow(QMainWindow):
     def __init__(self):
-        ping()
         super(MainWindow, self).__init__()
-        if os.path.exists("~/data.json") == False:
+        if os.path.exists("data.json") == False:
+            if testOnline() == False:
+                sys.exit()
+
             loginWindow = first.FirstTimeWindow()
             loginWindow.exec_()
 
@@ -129,7 +141,13 @@ class MainWindow(QMainWindow):
 
         self.layout = QGridLayout(self.centralWidget)
 
-        self.users = [user.user]
+        if testOnline() == False:
+            self.users = [user.user]
+        else:
+            r = requests.get('http://0.0.0.0:54321/' + str(user.user.id) + '/' + str(user.user.pin) + '/everyone/')
+            self.users = [user.User(dictionary["name"],0,dictionary["task_completion_rate"],dictionary["missed_deadline"],dictionary["weekly_productivity_score"],dictionary["weekly_task_completion_rate"],dictionary["weekly_deadlines_missed"],0,0,0) for dictionary in r.json()]
+            self.users.append(user.user)
+
         self.leaderboard = user.LeaderBoard(self.users,self)
         self.layout.addWidget(self.leaderboard,0,0,1,2)
 
@@ -163,6 +181,7 @@ class MainWindow(QMainWindow):
 
         self.about = QAction("About App",self) #get info about the app
         self.exit = QAction("Exit",self) #exit the app
+        self.delete = QAction("Delete Account",self)
         self.view = QAction("View Syllabi",self) #view the syllabi window
         self.hideSyllabi = QAction("Hide Syllabi",self) #hide the syllabi widget
         self.showSyllabi = QAction("Show Syllabi",self) #show the syllabi widget
@@ -174,6 +193,7 @@ class MainWindow(QMainWindow):
         self.hideSyllabi.triggered.connect(self.hideSyllabiWidget)
         self.showSyllabi.triggered.connect(self.showSyllabiWidget)
         self.openFlashcards.triggered.connect(self.showFlashcards)
+        self.delete.triggered.connect(self.deleteAccount)
 
         self.filemenu.addAction(self.about)
         self.filemenu.addAction(self.exit)
@@ -181,6 +201,11 @@ class MainWindow(QMainWindow):
         self.syllabimenu.addAction(self.hideSyllabi)
         self.syllabimenu.addAction(self.showSyllabi)
         self.flashcardmenu.addAction(self.openFlashcards)
+
+    def deleteAccount(self):
+        r = requests.delete('http://0.0.0.0:54321/' + str(user.user.id) + '/' + str(user.user.pin) + '/')
+        os.remove("data.json")
+        sys.exit()
 
     def showFlashcards(self):
         self.makeFlashCardWindows(self.flashcards)
@@ -194,9 +219,13 @@ class MainWindow(QMainWindow):
         if self.creator.subjectInput.text() == "" or self.creator.frontInput.text() == "" or self.creator.backInput.text() == "":
             return
 
-        self.flashcards.append(flash.FlashCard(self.creator.subjectInput.text(),self.creator.frontInput.text(),self.creator.backInput.text(),1))
+        self.flashcards.append(flash.FlashCard(self.creator.subjectInput.text(),self.creator.frontInput.text(),self.creator.backInput.text()))
+        flash.flashcards = self.flashcards
+        js.writeAll(user.user,curriculum.curriculums,task.tasks,flash.flashcards)
+
         for flashcardWindow in self.flashcardWindows:
             flashcardWindow.create.triggered.disconnect(self.inputFlashcardInfo)
+            flashcardWindow.delete.triggered.disconnect(self.deleteFlashcard)
 
         self.creator.subjectInput.clear()
         self.creator.frontInput.clear()
@@ -205,14 +234,27 @@ class MainWindow(QMainWindow):
         self.flashcardWindows.clear()
         self.makeFlashCardWindows(self.flashcards)
 
+    def deleteFlashcard(self):
+        self.deleter = flash.FlashCardDeleteWindow()
+        self.deleter.show()
+        self.deleter.buttonConfirm.released.connect(self.removeFlashcard)
+
+    def removeFlashcard(self):
+        self.flashcards.remove(self.deleter.index)
+        js.writeAll(user.user,curriculum.curriculums,task.tasks,flash.flashcards)
+
     def makeFlashCardWindows(self,flashcards):
         self.flashcardWindows = []
+        if flash.flashcards[0] == None:
+            inputFlashcardInfo()
+
         flashcardsNew = flash.sortFlashcards(flashcards)
         for section in range(len(flashcardsNew)):
             self.flashcardWindows.append(flash.FlashCardWindow(flashcardsNew,section))
 
         for flashcardWindow in self.flashcardWindows:
             flashcardWindow.create.triggered.connect(self.inputFlashcardInfo)
+            flashcardWindow.delete.triggered.connect(self.deleteFlashcard)
 
     def load_ui(self):
         loader = QUiLoader()
