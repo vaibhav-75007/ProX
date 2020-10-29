@@ -2,6 +2,7 @@ import json
 import flashcard_class as flash
 import Task as task
 import user_class as user
+import datetime
 
 #must read in all of the json
 #must read in all tasks
@@ -11,7 +12,7 @@ import user_class as user
 
 def stringToDatetime(string):
     splitDate = string.split('/')
-    return datetime.datetime(splitDate[0],splitDate[1],splitDate[2])
+    return datetime.datetime(int(splitDate[0]),int(splitDate[1]),int(splitDate[2][0:2]))
 
 def readAll():
     dictionary = 0
@@ -21,11 +22,11 @@ def readAll():
     task.tasks = [task.Task(tempDict["name"],tempDict["description"],stringToDate(tempDict["deadline"])) for tempDict in dictionary["tasks"]]
     flash.flashcards = [flash.Flashcard(tempDict["subject"],tempDcit["front_text"],tempDict["back_text"]) for tempDict in dictionary["flashcards"]]
 
-def writeAll(user,curriculums,tassk,flashcards): #create case to write null in lists if any of the arrays are empty
-    jsonString = dict(user)
-    curriculumsString = dict(curriculums)
-    tasksString = dict(tasks)
-    flashcardsString = dict(flashcards)
+def writeAll(user,curriculums,tasks,flashcards): #create case to write null in lists if any of the arrays are empty
+    jsonString = user.__dict__()
+    curriculumsString = [curriculum.__dict__() for curriculum in curriculums]
+    tasksString = [task.__dict__() for task in tasks]
+    flashcardsString = [flashcard.__dict__() for flashcard in flashcards]
     jsonString["tassk"] = tasksString
     jsonString["flashcards"] = flashcardsString
     jsonString["curriculums"] = curriculumsString

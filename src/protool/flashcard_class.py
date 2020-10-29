@@ -4,8 +4,7 @@ from PySide2.QtCore import Qt, Signal, Slot
 import copy
 
 class FlashCard():
-    def __init__(self, subject, front_text,back_text,idNo):
-        self.id = idNo
+    def __init__(self, subject, front_text,back_text):
         self.subject = subject
         self.front_text = front_text
         self.back_text = back_text

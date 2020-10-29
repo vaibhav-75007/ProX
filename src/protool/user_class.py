@@ -16,16 +16,15 @@ class User():
 
     def __dict__(self):
         return {
-                "id":self.idNo,
+                "id":self.id,
                 "name":self.name,
                 "email":self.email,
                 "pin":self.pin,
-                "productivity_core":self.productivity_score,
                 "task_completion_rate":self.task_completion_rate,
-                "deadlines_missed":self.deadlines_missed,
-                "week_productivity_score":self.week_productivity_score,
-                "week_task_completion_rate":self.week_task_completion_rate,
-                "week_deadline_missed":self.week_deadline_missed
+                "missed_deadline":self.deadlines_missed,
+                "weekly_productivity_score":self.week_productivity_score,
+                "weekly_task_completion_rate":self.week_task_completion_rate,
+                "weekly_deadlines_missed":self.week_deadline_missed
                }
     
     def change_name(self,string):

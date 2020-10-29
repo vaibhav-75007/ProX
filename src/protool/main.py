@@ -103,7 +103,7 @@ QLabel {
 """
 
 def ping():
-    r = requests.get('http://0.0.0.0:54321/',timeout=1)
+    r = requests.get('http://0.0.0.0:54321/')
     print(r.status_code)
 
 class MainWindow(QMainWindow):

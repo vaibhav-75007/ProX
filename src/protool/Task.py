@@ -6,8 +6,7 @@ import datetime
 
 
 class Task:
-    def __init__(self,deadline,name,description,idNo):
-        self.id = idNo
+    def __init__(self,deadline,name,description):
         self.deadline = deadline
         self.name = name
         self.description = description
@@ -27,7 +26,7 @@ class Task:
         return {
                 "name":self.name,
                 "description":self.description,
-                "deadline":self.deadline
+                "deadline":str(self.deadline.year) + '/' + str(self.deadline.month) + '/' + str(self.deadline.day)
                }
 
     def getDeadline(self):
