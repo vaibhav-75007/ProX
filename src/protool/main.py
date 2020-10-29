@@ -140,13 +140,18 @@ class MainWindow(QMainWindow):
         self.spacer1 = QSpacerItem(100,100)
 
         self.layout = QGridLayout(self.centralWidget)
+        self.appended = False
 
         if testOnline() == False:
             self.users = [user.user]
         else:
-            r = requests.get('http://0.0.0.0:54321/' + str(user.user.id) + '/' + str(user.user.pin) + '/everyone/')
-            self.users = [user.User(dictionary["name"],0,dictionary["task_completion_rate"],dictionary["missed_deadline"],dictionary["weekly_productivity_score"],dictionary["weekly_task_completion_rate"],dictionary["weekly_deadlines_missed"],0,0,0) for dictionary in r.json()]
-            self.users.append(user.user)
+            try:
+                r = requests.get('http://0.0.0.0:54321/' + str(user.user.id) + '/' + str(user.user.pin) + '/everyone/')
+                self.users = [user.User(dictionary["name"],0,dictionary["task_completion_rate"],dictionary["missed_deadline"],dictionary["weekly_productivity_score"],dictionary["weekly_task_completion_rate"],dictionary["weekly_deadlines_missed"],0,0,0) for dictionary in r.json()]
+                print([user.name for user in self.users])
+            except TypeError:
+                print("Your user account is not on the database")
+                self.users = [user.user]
 
         self.leaderboard = user.LeaderBoard(self.users,self)
         self.layout.addWidget(self.leaderboard,0,0,1,2)

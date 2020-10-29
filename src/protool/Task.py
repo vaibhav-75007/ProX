@@ -8,7 +8,6 @@ import user_class as user
 import flashcard_class as flash
 import curriculum
 
-
 class Task:
     def __init__(self,deadline,name,description):
         self.deadline = deadline
@@ -69,15 +68,15 @@ class ToDoList(QListWidget):
     def __init__(self,tasks,*args,**kwargs):
         super(ToDoList,self).__init__(*args,**kwargs)
         if tasks[0] == None:
-            self.show()
+            self.tasks = []
+            self.checkBoxes = []
             return
 
         self.tasks = self.sortTasks(tasks)
+        self.checkBoxes = []
 
         for task in self.tasks:
             self.addItem(TaskWidget(task))
-
-        self.checkBoxes = []
 
         for i in range(self.count()):
             self.checkBoxes.append(QCheckBox())
@@ -120,11 +119,12 @@ class ToDoList(QListWidget):
         if task.name == "" or task.description == "":
             return
 
-        if self.tasks[0] == None:
-            self.tasks = []
+        if len(self.tasks) > 0:
+            if self.tasks[0] == None:
+                self.tasks = []
 
         self.tasks.append(task)
-        tasks = copy.deepcopy(self.tasks)
+        tasks.append(task)
         js.writeAll(user.user,curriculum.curriculums,tasks,flash.flashcards)
 
         for j in range(3):
@@ -215,12 +215,12 @@ class TaskInputFieldWidget(QWidget):
         return datetime.datetime(self.deadlineInputYear.value(),self.deadlineInputMonth.value(),self.deadlineInputDay.value())
 
     def createTask(self):
-        task = Task(self.inputToDate(),self.nameInput.text(),self.descriptionInput.text(),5)
+        task = Task(self.inputToDate(),self.nameInput.text(),self.descriptionInput.text())
         self.nameInput.clear()
         self.descriptionInput.clear()
         self.deadlineInputYear.setValue(datetime.datetime.now().year)
-        self.deadlineInputMonth.setValue(datetime.now().month)
-        self.deadlineInputDay.setValue(datetime.now().day)
+        self.deadlineInputMonth.setValue(datetime.datetime.now().month)
+        self.deadlineInputDay.setValue(datetime.datetime.now().day)
 
         self.add.emit(task)
 
