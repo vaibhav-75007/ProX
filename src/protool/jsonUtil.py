@@ -17,17 +17,20 @@ def stringToDatetime(string):
 def readAll():
     dictionary = 0
     with open("data.json",'r') as file: #create case if no flashcards, no tasks
-        dictionary = json.loads(file)
-    user.user = user.User(dictionary["name"],dictionary["productivity_score"],dictionary["task_completion_rate"],dictionary["deadlines_missed"],dictionary["week_productivity_score"],dictionary["week_task_completion_rate"],dictionary["week_deadline_missed"],dictionary["id"],dictionary["email"],dictionary["pin"])
-    task.tasks = [task.Task(tempDict["name"],tempDict["description"],stringToDate(tempDict["deadline"])) for tempDict in dictionary["tasks"]]
-    flash.flashcards = [flash.Flashcard(tempDict["subject"],tempDcit["front_text"],tempDict["back_text"]) for tempDict in dictionary["flashcards"]]
+        fileContents = file.read()
+        dictionary = json.loads(fileContents)
+
+    print(dictionary)
+    user.user = user.User(dictionary["name"],0,dictionary["task_completion_rate"],dictionary["missed_deadline"],dictionary["weekly_productivity_score"],dictionary["weekly_task_completion_rate"],dictionary["weekly_deadlines_missed"],dictionary["id"],dictionary["email"],dictionary["pin"])
+    task.tasks = [task.Task(name=tempDict["name"],description=tempDict["description"],deadline=stringToDatetime(tempDict["deadline"])) for tempDict in dictionary["tasks"]]
+    flash.flashcards = [flash.FlashCard(tempDict["subject"],tempDict["front_text"],tempDict["back_text"]) for tempDict in dictionary["flashcards"]]
 
 def writeAll(user,curriculums,tasks,flashcards): #create case to write null in lists if any of the arrays are empty
     jsonString = user.__dict__()
     curriculumsString = [curriculum.__dict__() for curriculum in curriculums]
     tasksString = [task.__dict__() for task in tasks]
     flashcardsString = [flashcard.__dict__() for flashcard in flashcards]
-    jsonString["tassk"] = tasksString
+    jsonString["tasks"] = tasksString
     jsonString["flashcards"] = flashcardsString
     jsonString["curriculums"] = curriculumsString
 

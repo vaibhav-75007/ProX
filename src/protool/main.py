@@ -110,7 +110,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         ping()
         super(MainWindow, self).__init__()
-        if os.path.exists("data.json") == False:
+        if os.path.exists("~/data.json") == False:
             loginWindow = first.FirstTimeWindow()
             loginWindow.exec_()
 
@@ -129,13 +129,13 @@ class MainWindow(QMainWindow):
 
         self.layout = QGridLayout(self.centralWidget)
 
-        self.users = [user.User("Test",4,3,4,5,4,3,1),user.User("Test1",3,6,43,5,3,3,2),user.User("Test2",3,2,5,4,3,5,3),user.User("Test3",3,2,5,4,3,5,4),user.User("Test4",3,2,5,4,3,5,5),user.User("Test5",3,2,5,4,3,5,6)]
+        self.users = [user.user]
         self.leaderboard = user.LeaderBoard(self.users,self)
         self.layout.addWidget(self.leaderboard,0,0,1,2)
 
         self.layout.addItem(self.spacer,0,2,1,1)
 
-        self.tasks = [task.Task(datetime.now(),"test","test",1),task.Task(datetime.now(),"test1","test1",2),task.Task(datetime.now(),"test2","test2",3),task.Task(datetime.now(),"test3","test3",4),task.Task(datetime(2020,12,3),"test4","test4",5)]
+        self.tasks = task.tasks
         self.todo = task.ToDoList(self.tasks)
         self.layout.addWidget(self.todo,0,3,1,1)
 
@@ -151,7 +151,7 @@ class MainWindow(QMainWindow):
         self.taskInputField.add.connect(self.todo.addTask)
         self.taskInputField.done.released.connect(self.taskInputField.createTask)
 
-        self.flashcards = [flash.FlashCard("Math","2 + 2","4",1),flash.FlashCard("Physics","Force","Mass x Acceleration",2),flash.FlashCard("Comp Sci","Function","Returns a value",3),flash.FlashCard("Math","3","3",4)]
+        self.flashcards = flash.flashcards
 
         self.setWindowTitle("ProX")
 
