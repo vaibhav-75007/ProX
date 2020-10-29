@@ -73,17 +73,18 @@ class FirstTimeWindow(QDialog):
         newUser = r.json()
 
         user.user = user.User(idNo=newUser["id"],name=newUser["name"],email=newUser["email"],password=newUser["pin"],deadlines_missed=0,task_completion_rate=0,productivity_score=0,week_task_completion_rate=0,week_productivity_score=0,week_deadline_missed=0)
-        flash.flashcards = []
-        task.tasks = []
+        flash.flashcards = [None]
+        task.tasks = [None]
+        curriculum.curriculums = [None]
 
         with open("data.json",'wt') as file:
             string = dict(user.user)
-            string["tassk"] = []
-            string["flashcards"] = []
-            string["curriculums"] = []
+            string["tasks"] = [None]
+            string["flashcards"] = [None]
+            string["curriculums"] = [None]
             file.write(json.dumps(string))
 
-        self.close()
+        self.hide()
 
     def login(self):
         data = {"pin":int(self.loginPassword.text()),"email":self.loginUsername.text()}

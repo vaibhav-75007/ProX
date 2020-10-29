@@ -1,5 +1,5 @@
 # This Python file uses the following encoding: utf-8
-from PySide2.QtWidgets import QMainWindow,QLineEdit,QFormLayout,QDialogButtonBox
+from PySide2.QtWidgets import QMainWindow,QLineEdit,QFormLayout,QDialogButtonBox,QWidget
 
 
 class Curriculum:
@@ -22,6 +22,10 @@ class Curriculum:
     def deleteTopic(self,topic):
         self.topics.remove(topic)
 
-#create widget for curriculums view
+class CurriculumWindow(QMainWindow):
+    pass
+
+class CurriculumWidget(QWidget):
+    pass
 
 curriculums = 0

@@ -115,3 +115,5 @@ class LeaderBoard(QListWidget):
         self.setAutoFillBackground(True)
 
         self.show()
+
+user = 0

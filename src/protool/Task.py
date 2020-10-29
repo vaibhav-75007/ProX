@@ -3,6 +3,10 @@ from PySide2.QtWidgets import QListWidgetItem, QListWidget, QCheckBox, QWidget, 
 from PySide2.QtGui import QColor, QBrush, QLinearGradient, QPalette
 from PySide2.QtCore import Signal, Slot
 import datetime
+import jsonUtil as js
+import user_class as user
+import flashcard_class as flash
+import curriculum
 
 
 class Task:
@@ -64,6 +68,10 @@ class TaskWidget(QListWidgetItem):
 class ToDoList(QListWidget):
     def __init__(self,tasks,*args,**kwargs):
         super(ToDoList,self).__init__(*args,**kwargs)
+        if tasks[0] == None:
+            self.show()
+            return
+
         self.tasks = self.sortTasks(tasks)
 
         for task in self.tasks:
@@ -91,26 +99,33 @@ class ToDoList(QListWidget):
         if index == -1:
             return
 
-        print(index)
-        print("List len: " + str(self.count()))
-        print("Checkboxes len: " + str(len(self.checkBoxes)))
-        print("Tasks len: " + str(len(self.tasks)))
         self.takeItem(index)
         self.checkBoxes.pop(index)
+        tasks.remove(self.tasks[index])
         self.tasks.pop(index)
+        if len(tasks) == 0:
+            tasks.append(None)
+            js.writeAll()
+            return
+
+        js.writeAll(user.user,curriculum.curriculums,tasks,flash.flashcards)
 
         for i in range(self.count()):
             self.checkBoxes[i].stateChanged.connect(self.removeTask)
 
-        print("Finished")
         return
 
     @Slot(Task)
-    def addTask(self,task):
+    def addTask(self,task):    
         if task.name == "" or task.description == "":
             return
 
+        if self.tasks[0] == None:
+            self.tasks = []
+
         self.tasks.append(task)
+        tasks = copy.deepcopy(self.tasks)
+        js.writeAll(user.user,curriculum.curriculums,tasks,flash.flashcards)
 
         for j in range(3):
             for i in range(self.count()):
@@ -208,3 +223,5 @@ class TaskInputFieldWidget(QWidget):
         self.deadlineInputDay.setValue(datetime.now().day)
 
         self.add.emit(task)
+
+tasks = 0

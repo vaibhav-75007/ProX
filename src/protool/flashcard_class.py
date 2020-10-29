@@ -160,8 +160,8 @@ class FlashCardCreateWindow(QMainWindow):
         self.setCentralWidget(self.centralWidget)
 
         self.layout = QVBoxLayout(self.centralWidget)
-        self.front = FlashCardSideView()
-        self.back = FlashCardSideView()
+        self.front = QLabel()
+        self.back = QLabel()
         self.form = QFormLayout()
         self.form.addRow(QLabel("Front:"),self.front)
         self.form.addRow(QLabel("Back:"),self.back)
@@ -172,6 +172,9 @@ class FlashCardCreateWindow(QMainWindow):
         self.frontInput = QLineEdit()
         self.backInput = QLineEdit()
         self.done = QPushButton()
+
+        self.frontInput.textChanged.connect(self.preview)
+        self.backInput.textChanged.connect(self.preview)
 
         self.lineEditLayout.addRow(QLabel("Subject:"),self.subjectInput)
         self.lineEditLayout.addRow(QLabel("Front:"),self.frontInput)
@@ -184,12 +187,69 @@ class FlashCardCreateWindow(QMainWindow):
         self.layout.addLayout(self.inputLayout)
 
         self.setLayout(self.layout)
+        self.setFixedSize(400,300)
         self.show()
 
-class FlashCardSideView(QWidget):
-    def __init__(self,*args,**kwargs):
-        super(FlashCardSideView,self).__init__(*args,**kwargs)
-        self.text = QLabel()
+    def preview(self):
+        self.front.setText(self.frontInput.text())
+        self.back.setText(self.backInput.text())
 
-    def setText(self,text):
-        self.text.setText(text)
+class FlashCardDeleteWindow(QMainWindow):
+    def __init__(self,*args,**kwargs):
+        super(FlashCardDeleteWindow,self).__init__(*args,**kwargs)
+
+        self.index = 0
+
+        self.centralWidget = QWidget()
+        self.setCentralWidget(self.centralWidget)
+
+        self.layout = QVBoxLayout(self.centralWidget)
+        self.sides = QHBoxLayout()
+        self.sides.setContentsMargins(0,0,0,0)
+        self.buttons = QHBoxLayout()
+
+        self.front = QLabel()
+        self.back = QLabel()
+        self.sides.addWidget(self.front)
+        self.sides.addWidget(self.back)
+
+        self.buttonPrevious = QPushButton("Previous")
+        self.buttonConfirm =  QPushButton("Confirm")
+        self.buttonNext = QPushButton("Next")
+        self.buttons.addWidget(self.buttonPrevious)
+        self.buttons.addWidget(self.buttonConfirm)
+        self.buttons.addWidget(self.buttonNext)
+
+        self.buttonNext.released.connect(self.nextCard)
+        self.buttonPrevious.released.connect(self.previousCard)
+
+        self.layout.addLayout(self.sides)
+        self.layout.addLayout(self.buttons)
+
+        self.setLayout(self.layout)
+        self.setWindowTitle("Delete Flashcards")
+        self.setFixedSize(400,300)
+
+        self.showCard()
+
+    def showCard(self):
+        self.front.setText(flashcards[self.index].front_text)
+        self.back.setText(flashcards[self.index].back_text)
+
+    def nextCard(self):
+        if self.index < len(flashcards):
+            self.index += 1
+        else:
+            self.index = 0
+
+        self.showCard()
+
+    def previousCard(self):
+        if self.index > -1:
+            self.index -= 1
+        else:
+            self.index = len(flashcards) - 1
+
+        self.showCard()
+
+flashcards = 0
