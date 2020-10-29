@@ -1,10 +1,10 @@
 # This Python file uses the following encoding: utf-8
-from PySide2 import QtWidgets
+from PySide2.QtWidgets import QMainWindow,QLineEdit,QFormLayout,QDialogButtonBox
 
 
 class Curriculum:
     def __init__(self,name,subject,topics):
-        self.name = naem
+        self.name = name
         self.subject = subject
         self.topics = topics
 

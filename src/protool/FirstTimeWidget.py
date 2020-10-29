@@ -9,13 +9,16 @@ import curriculum
 import jsonUtil as js
 import sys
 
+#work on case for null tasks, curriculums and flashcards list
+#work on requests for modifying user and deleting a user
+#work on curriculums widget and making gui better
 
 class FirstTimeWindow(QDialog):
     def __init__(self,*args,**kwargs):
         super(FirstTimeWindow,self).__init__(*args,**kwargs)
 
-        self.layout = QHBoxLayout()
-        self.form = QVBoxLayout()
+        self.layout = QVBoxLayout()
+        self.form = QHBoxLayout()
 
         self.loginForm = QFormLayout()
         self.signupForm = QFormLayout()
@@ -44,6 +47,7 @@ class FirstTimeWindow(QDialog):
         self.button.rejected.connect(sys.exit)
 
         self.layout.addWidget(self.button)
+        self.setWindowTitle("Login/Sign up")
 
         self.setLayout(self.layout)
 
@@ -86,9 +90,9 @@ class FirstTimeWindow(QDialog):
         r = requests.get('http://0.0.0.0:54321/recover/',json=data)
         print(r.status_code)
         recoveredUser = r.json()
-        user.user = user.User(idNo=recoveredUser["id"],name=recoveredUser["name"],email=recoveredUser["email"],password=recoveredUser["pin"],task_completion_rate=recoveredUser["task_completion_rate"],deadlines_missed=recoveredUser["deadlines_missed"],productivity_score=recoveredUser["productivity_score"],week_productivity_score=recoveredUser["week_productivity_score"],week_deadline_missed=recoveredUser["week_deadline_missed"],week_task_completion_rate=recoveredUser["week_task_completion_rate"])
+        user.user = user.User(idNo=recoveredUser["id"],name=recoveredUser["name"],email=recoveredUser["email"],pin=recoveredUser["pin"],task_completion_rate=recoveredUser["task_completion_rate"],deadlines_missed=recoveredUser["missed_deadline"],productivity_score=0,week_productivity_score=recoveredUser["weekly_productivity_score"],week_deadline_missed=recoveredUser["weekly_deadlines_missed"],week_task_completion_rate=recoveredUser["weekly_task_completion_rate"])
         task.tasks = [task.Task(name=tempDict["name"],deadline=js.stringToDatetime(tempDict["deadline"]),description=tempDict["description"]) for tempDict in recoveredUser["tasks"]]
         flash.flashcards = [flash.FlashCard(subject=tempDict["subject"],front_text=tempDict["front_text"],back_text=tempDict["back_text"]) for tempDict in recoveredUser["flashcards"]]
-        curriculum.curriculums = [curriculum.Curriculum(name=tempDict["name"],subject=tempDict["subject"],topics=tempDict("topics")) for tempDict in recoveredUser["curriculums"]]
+        curriculum.curriculums = [curriculum.Curriculum(name=tempDict["name"],subject=tempDict["subject"],topics=tempDict["topics"]) for tempDict in recoveredUser["curriculums"]]
 
-        js.writeAll()
+        js.writeAll(user.user,curriculum.curriculums,task.tasks,flash.flashcards)
