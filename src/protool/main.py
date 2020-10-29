@@ -9,6 +9,7 @@ import Task as task
 from datetime import datetime
 import FirstTimeWidget as first
 import jsonUtil as js
+import requests
 
 from PySide2.QtWidgets import QApplication, QMainWindow, QAction, QMenu, QGridLayout, QPushButton, QWidget, QSpacerItem
 from PySide2.QtCore import QFile
@@ -101,11 +102,16 @@ QLabel {
 }
 """
 
+def ping():
+    r = requests.get('http://0.0.0.0:54321/',timeout=1)
+    print(r.status_code)
+
 class MainWindow(QMainWindow):
     def __init__(self):
+        ping()
         super(MainWindow, self).__init__()
         if os.path.exists("data.json") == False:
-            loginWindow = first.FirstTimewindow()
+            loginWindow = first.FirstTimeWindow()
             loginWindow.exec_()
 
         #cases for if file is empty or invalid data

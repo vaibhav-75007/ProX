@@ -18,7 +18,7 @@ def readAll():
     with open("data.json",'r') as file: #create case if no flashcards, no tasks
         dictionary = json.loads(file)
     user.user = user.User(dictionary["name"],dictionary["productivity_score"],dictionary["task_completion_rate"],dictionary["deadlines_missed"],dictionary["week_productivity_score"],dictionary["week_task_completion_rate"],dictionary["week_deadline_missed"],dictionary["id"],dictionary["email"],dictionary["pin"])
-    task.tasks = [task.Task(tempDict["name"],tempDict["description"],stringToDate(tempDict["deadline"])]) for tempDict in dictionary["tasks"]]
+    task.tasks = [task.Task(tempDict["name"],tempDict["description"],stringToDate(tempDict["deadline"])) for tempDict in dictionary["tasks"]]
     flash.flashcards = [flash.Flashcard(tempDict["subject"],tempDcit["front_text"],tempDict["back_text"]) for tempDict in dictionary["flashcards"]]
 
 def writeAll(user,curriculums,tassk,flashcards): #create case to write null in lists if any of the arrays are empty
