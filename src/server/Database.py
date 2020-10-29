@@ -28,7 +28,7 @@ class DB:
         """
         Add a brand new user with blank data then return this new user object
         """
-        if len(self.Users == 0):
+        if len(self.Users) == 0:
             granted_id = 1
         else:
             granted_id = max(self.Users, key=lambda user: user["id"])["id"] + 1

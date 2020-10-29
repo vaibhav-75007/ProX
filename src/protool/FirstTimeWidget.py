@@ -72,13 +72,13 @@ class FirstTimeWindow(QDialog):
         print(r.status_code)
         newUser = r.json()
 
-        user.user = user.User(idNo=newUser["id"],name=newUser["name"],email=newUser["email"],password=newUser["pin"],deadlines_missed=0,task_completion_rate=0,productivity_score=0,week_task_completion_rate=0,week_productivity_score=0,week_deadline_missed=0)
+        user.user = user.User(idNo=newUser["id"],name=newUser["name"],email=newUser["email"],pin=newUser["pin"],deadlines_missed=0,task_completion_rate=0,productivity_score=0,week_task_completion_rate=0,week_productivity_score=0,week_deadline_missed=0)
         flash.flashcards = [None]
         task.tasks = [None]
         curriculum.curriculums = [None]
 
         with open("data.json",'wt') as file:
-            string = dict(user.user)
+            string = user.user.__dict__()
             string["tasks"] = [None]
             string["flashcards"] = [None]
             string["curriculums"] = [None]
