@@ -18,6 +18,36 @@ def ping_server():
     return "ProX server is working", status.HTTP_200_OK
 
 
+@api.route("/<int:user_id>/<int:pin>/everyone/", methods=['GET'])
+def get_everyone(user_id, pin):
+    """
+    Get public data from every user for the leaderboard, EXCEPT the user that making the request
+    """
+    
+    # If DB is not loaded into memory (i.e. idling), load DB first
+    if not server.DBLoaded:
+        server.LoadDB()
+
+    # Try querying user with ID user_id
+    try:
+        user = server.DB.QueryUser(user_id)
+    except KeyError as ke:
+        raise exceptions.NotFound(str(ke))
+    
+    # Comparing provided pin with the pin stored in the database
+    if pin != user["pin"]:
+        raise exceptions.AuthenticationFailed("Authentication Failed (User ID and PIN not matched)")
+        
+    users = list()
+    for user in server.DB.Users:
+        if user["id"] != user_id:
+            continue. # Skip the user that is requesting
+        adding = user.copy()
+        del adding["id"], adding["pin"], adding["email"]. # Remove sensitive data
+        users.append(adding)
+    return users, status.HTTP_200_OK
+
+
 @api.route("/<int:user_id>/<int:pin>/", methods=['GET', 'PUT', 'DELETE'])
 def user_request(user_id, pin):
     """
