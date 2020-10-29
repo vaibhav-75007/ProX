@@ -2,7 +2,7 @@ from PySide2.QtWidgets import QListWidgetItem, QListWidget
 from PySide2.QtGui import QColor, QBrush, QPalette
 
 class User():
-    def __init__(self,name,productivity_score,task_completion_rate,deadlines_missed,week_productivity_score,week_task_completion_rate,week_deadline_missed,idNo):
+    def __init__(self,name,productivity_score,task_completion_rate,deadlines_missed,week_productivity_score,week_task_completion_rate,week_deadline_missed,idNo,email,pin):
         self.id = idNo
         self.name = name
         self.productivity_score = productivity_score
@@ -11,11 +11,15 @@ class User():
         self.week_productivity_score = week_productivity_score
         self.week_task_completion_rate = week_task_completion_rate
         self.week_deadline_missed = week_deadline_missed
+        self.email = email
+        self.pin = pin
 
     def __dict__(self):
         return {
                 "id":self.idNo,
                 "name":self.name,
+                "email":self.email,
+                "pin":self.pin,
                 "productivity_core":self.productivity_score,
                 "task_completion_rate":self.task_completion_rate,
                 "deadlines_missed":self.deadlines_missed,

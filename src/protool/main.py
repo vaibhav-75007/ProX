@@ -4,9 +4,11 @@ import os
 import InfoDialog
 import flashcard_class as flash
 import user_class as user
+import curriculum
 import Task as task
 from datetime import datetime
 import FirstTimeWidget as first
+import jsonUtil as js
 
 from PySide2.QtWidgets import QApplication, QMainWindow, QAction, QMenu, QGridLayout, QPushButton, QWidget, QSpacerItem
 from PySide2.QtCore import QFile
@@ -105,6 +107,10 @@ class MainWindow(QMainWindow):
         if os.path.exists("data.json") == False:
             loginWindow = first.FirstTimewindow()
             loginWindow.exec_()
+
+        #cases for if file is empty or invalid data
+
+        js.readAll()
 
         self.load_ui()
         self.setFixedSize(1200,800)
@@ -223,6 +229,11 @@ class MainWindow(QMainWindow):
 
     def showSyllabiWidget(self):
         foo = 2
+
+    def deleteUser(self):
+        with open("data.json",'wt') as filee:
+            file.write("")
+        #call delete user on database
 
 
 if __name__ == "__main__":
