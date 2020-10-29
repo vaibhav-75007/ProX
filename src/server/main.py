@@ -41,7 +41,7 @@ def get_everyone(user_id, pin):
     users = list()
     for user in server.DB.Users:
         if user["id"] != user_id:
-            continue. # Skip the user that is requesting
+            continue # Skip the user that is requesting
         adding = user.copy()
         del adding["id"], adding["pin"], adding["email"]. # Remove sensitive data
         users.append(adding)
