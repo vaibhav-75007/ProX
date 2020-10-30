@@ -98,10 +98,19 @@ class ToDoList(QListWidget):
         if index == -1:
             return
 
+        if self.tasks[index].isOverdue:
+            user.user.increase_deadlines_missed(1)
+            user.user.increase_week_deadline_missed(1)
+
         self.takeItem(index)
         self.checkBoxes.pop(index)
         tasks.remove(self.tasks[index])
-        self.tasks.pop(index)
+        user.user.increase_task_completion_rate(1)
+        user.user.increase_week_task_completion_rate(1)
+
+        user.user.productivity_score = calcProScore(user.user.task_completion_rate,user.user.deadlines_missed)
+        user.user.week_productivity_score = calcProScore(user.user.week_task_completion_rate,user.user.week_deadline_missed)
+
         if len(tasks) == 0:
             js.writeAll(user.user,curriculum.curriculums,tasks,flash.flashcards)
             return
@@ -187,7 +196,7 @@ class TaskInputFieldWidget(QWidget):
         self.layout.addRow(self.descriptionLabel,self.descriptionInput)
         self.layout.addRow(self.deadlineLabel,self.deadlineInputLayout)
 
-        self.done = QPushButton()
+        self.done = QPushButton("+")
         self.mainlayout.addWidget(self.done)
         self.mainlayout.addLayout(self.layout)
         self.setLayout(self.mainlayout)
@@ -220,3 +229,9 @@ class TaskInputFieldWidget(QWidget):
         self.add.emit(task)
 
 tasks = 0
+
+def calcProScore(taskCompletion,missedDeadlines):
+    if missedDeadlines == 0:
+        return taskCompletion
+    else:
+        return int(taskCompletion / missedDeadlines)

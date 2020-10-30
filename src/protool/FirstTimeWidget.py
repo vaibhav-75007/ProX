@@ -8,6 +8,7 @@ import Task as task
 import curriculum
 import jsonUtil as js
 import sys
+import datetime
 
 #work on case for null tasks, curriculums and flashcards list
 #work on requests for modifying user and deleting a user
@@ -84,6 +85,7 @@ class FirstTimeWindow(QDialog):
             string["curriculums"] = []
             file.write(json.dumps(string))
 
+        js.writeDateLastOn()
         self.hide()
 
     def login(self):

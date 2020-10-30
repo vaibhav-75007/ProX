@@ -36,7 +36,7 @@ def readAll():
     else:
         curriculum.curriculums = [curriculum.Curriculum(tempDict["name"],tempDict["subject"],tempDict["topics"]) for tempDict in dictionary["curriculums"]]
 
-def writeAll(user,curriculums,tasks,flashcards): #create case to write null in lists if any of the arrays are empty
+def writeAll(user,curriculums,tasks,flashcards):
     jsonString = toJson(user,curriculums,tasks,flashcards)
 
     with open("data.json",'wt') as file:
@@ -44,6 +44,7 @@ def writeAll(user,curriculums,tasks,flashcards): #create case to write null in l
 
     r = requests.put('http://0.0.0.0:54321/' + str(user.id) + '/' + str(user.pin) + '/',json=jsonString)
     print(r.status_code)
+    writeDateLastOn()
 
 def toJson(user,curriculums,tasks,flashcards):
     jsonString = user.__dict__()
@@ -65,3 +66,19 @@ def toJson(user,curriculums,tasks,flashcards):
     jsonString["curriculums"] = curriculumsString
 
     return jsonString
+
+def writeDateLastOn():
+    with open("date.txt",'wt') as file:
+        date = datetime.datetime.now()
+        file.write(f'{date.year}/{date.month}/{date.day}/{date.weekday()}')
+
+def readDateLastOn():
+    with open("date.txt",'r') as file:
+        now = datetime.datetime.now()
+        string = file.read()
+        date = string.split('/')
+        if int(date[3]) == 0 and int(date[0]) <= now.year and int(date[1]) <= now.month and int(date[2]) < now.day:
+            user.user.week_productivity_score = 0
+            user.user.week_deadline_missed = 0
+            user.user.week_task_completion_rate = 0
+            writeAll(user.user,curriculum.curriculums,task.tasks,flash.flashcards)

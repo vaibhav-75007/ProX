@@ -74,11 +74,11 @@ class UserListItem(QListWidgetItem):
         self.formattedText = {
         "name": "Username: " + user.name + '\n',
         "proScore": "Productivity Score: " + str(user.productivity_score) + '\n',
-        "taskComp": "Task Completion Rate: " + str(user.task_completion_rate) + '\n',
+        "taskComp": "Tasks Completed: " + str(user.task_completion_rate) + '\n',
         "deadMissed": "Deadlines Missed: " + str(user.deadlines_missed) + '\n',
-        "weekPro": "Weekly Productivity Score: " + str(user.week_productivity_score) + '\n',
-        "weekTaskComp": "Weekly Task Completion: " + str(user.week_task_completion_rate) + '\n',
-        "weekDeadMissed": "Weekly Missed Deadlines: " + str(user.week_deadline_missed) + '\n'
+        "weekPro": "Productivity Score This Week: " + str(user.week_productivity_score) + '\n',
+        "weekTaskComp": "Tasks Completed This Week: " + str(user.week_task_completion_rate) + '\n',
+        "weekDeadMissed": "Missed Deadlines This Week: " + str(user.week_deadline_missed) + '\n'
         }
 
         self.stringText = ""
