@@ -208,6 +208,9 @@ class MainWindow(QMainWindow):
         self.flashcardmenu.addAction(self.openFlashcards)
 
     def deleteAccount(self):
+        if testOnline() == False:
+            print("Db offline")
+            return
         r = requests.delete('http://0.0.0.0:54321/' + str(user.user.id) + '/' + str(user.user.pin) + '/')
         os.remove("data.json")
         sys.exit()
