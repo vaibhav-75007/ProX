@@ -85,6 +85,7 @@ def user_request(user_id, pin):
                 name = data["name"],
                 email = data["email"],
                 pin = data["pin"],
+                productivity_score = data["productivity_score"],
                 task_completion_rate = data["task_completion_rate"],
                 missed_deadline = data["missed_deadline"],
                 weekly_productivity_score = data["weekly_productivity_score"],

@@ -37,6 +37,7 @@ class DB:
             name = name,
             email = email,
             pin = pin,
+            productivity_score = 0,
             task_completion_rate = 0,
             missed_deadline = 0,
             weekly_productivity_score = 0,
@@ -50,8 +51,9 @@ class DB:
         self.Ids[granted_id] = len(self.Users) - 1
         return user
 
-    def ModUser(self, user_id, name, email, pin, task_completion_rate, missed_deadline, weekly_productivity_score,
-                weekly_task_completion_rate, weekly_deadlines_missed, tasks, flashcards, curriculums):
+    def ModUser(self, user_id, name, email, pin, productivity_score, task_completion_rate, missed_deadline, 
+                weekly_productivity_score, weekly_task_completion_rate, weekly_deadlines_missed,
+                tasks, flashcards, curriculums):
         """
         Modify an existing user
         """
@@ -60,6 +62,7 @@ class DB:
             name = name,
             email = email,
             pin = pin,
+            productivity_score = productivity_score,
             task_completion_rate = task_completion_rate,
             missed_deadline = missed_deadline,
             weekly_productivity_score = weekly_productivity_score,
@@ -113,6 +116,7 @@ class DB:
             name = str,
             email = str,
             pin = int,
+            productivity_score = int,
             task_completion_rate = int,
             missed_deadline = int,
             weekly_productivity_score = int,
@@ -149,9 +153,9 @@ class DB:
                 if type(task[attr]) != task_types[attr]:
                     raise TypeError(f"Type error {attr} in {task}. Expected {task_types[attr]}. Found {type(task[attr])}")
             try:
-                datetime.strptime(task["deadline"], 'YY/mm/dd HH:MM:SS')
+                datetime.strptime(task["deadline"], '%Y/%m/%d %H:%M:%S')
             except:
-                raise Exception(f"String formatted time not correct in {task}. Must be YY/mm/dd HH:MM:SS")
+                raise Exception(f"String formatted time not correct in {task}. Must be YYYY/mm/dd HH:MM:SS")
 
         for flashcard in data["flashcards"]:
             if type(flashcard) != dict:
