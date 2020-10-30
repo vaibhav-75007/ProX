@@ -129,6 +129,7 @@ class MainWindow(QMainWindow):
         #cases for if file is empty or invalid data
 
         js.readAll()
+        js.readDateLastOn()
 
         self.load_ui()
         self.setFixedSize(1200,800)
@@ -185,23 +186,18 @@ class MainWindow(QMainWindow):
 
     def initMenu(self): #set up the menu bar, with File, syllabi and leaderboard
         self.filemenu = self.menu.addMenu("&File")
-        self.syllabimenu = self.menu.addMenu("&Syllabi")
-        self.leaderboardmenu = self.menu.addMenu("&Leader Board")
+        self.syllabimenu = self.menu.addMenu("&Curriculums")
         self.flashcardmenu = self.menu.addMenu("&Flashcards")
 
         self.about = QAction("About App",self) #get info about the app
         self.exit = QAction("Exit",self) #exit the app
         self.delete = QAction("Delete Account",self)
-        self.view = QAction("View Syllabi",self) #view the syllabi window
-        self.hideSyllabi = QAction("Hide Syllabi",self) #hide the syllabi widget
-        self.showSyllabi = QAction("Show Syllabi",self) #show the syllabi widget
+        self.view = QAction("View Curriculums",self) #view the syllabi window
         self.openFlashcards = QAction("View Flashcards",self)
 
         self.about.triggered.connect(self.info)
         self.exit.triggered.connect(sys.exit)
-        self.view.triggered.connect(self.openSyllabiWindow)
-        self.hideSyllabi.triggered.connect(self.hideSyllabiWidget)
-        self.showSyllabi.triggered.connect(self.showSyllabiWidget)
+        self.view.triggered.connect(self.openCurriculumWindow)
         self.openFlashcards.triggered.connect(self.showFlashcards)
         self.delete.triggered.connect(self.deleteAccount)
 
@@ -209,8 +205,6 @@ class MainWindow(QMainWindow):
         self.filemenu.addAction(self.exit)
         self.filemenu.addAction(self.delete)
         self.syllabimenu.addAction(self.view)
-        self.syllabimenu.addAction(self.hideSyllabi)
-        self.syllabimenu.addAction(self.showSyllabi)
         self.flashcardmenu.addAction(self.openFlashcards)
 
     def deleteAccount(self):
@@ -247,6 +241,8 @@ class MainWindow(QMainWindow):
 
         self.flashcardWindows.clear()
         self.makeFlashCardWindows(self.flashcards)
+        self.creator.hide()
+        self.creator.show()
 
     def deleteFlashcard(self):
         self.deleter = flash.FlashCardDeleteWindow()
@@ -254,23 +250,47 @@ class MainWindow(QMainWindow):
         self.deleter.buttonConfirm.released.connect(self.removeFlashcard)
 
     def removeFlashcard(self):
-        self.flashcards.remove(self.deleter.index)
+        self.flashcards.pop(self.deleter.index)
         js.writeAll(user.user,curriculum.curriculums,task.tasks,flash.flashcards)
+        self.deleter.close()
+        self.makeFlashCardWindows(self.flashcards)
 
     def makeFlashCardWindows(self,flashcards):
+        self.flashcardWindowIndex = 0
         self.flashcardWindows = []
         if len(flash.flashcards) == 0:
             self.inputFlashcardInfo()
             if len(flash.flashcards) == 0:
                 return
 
-        flashcardsNew = flash.sortFlashcards(flashcards)
-        for section in range(len(flashcardsNew)):
-            self.flashcardWindows.append(flash.FlashCardWindow(flashcardsNew,section))
+        flashcards = flash.sortFlashcards(flashcards)
+        for section in range(len(flashcards)):
+            self.flashcardWindows.append(flash.FlashCardWindow(flashcards,section))
 
         for flashcardWindow in self.flashcardWindows:
             flashcardWindow.create.triggered.connect(self.inputFlashcardInfo)
             flashcardWindow.delete.triggered.connect(self.deleteFlashcard)
+            flashcardWindow.nextCollection.released.connect(self.nextFlashcardWindow)
+            flashcardWindow.previousCollection.released.connect(self.previousFlashcardWindow)
+            flashcardWindow.hide()
+
+        self.flashcardWindows[self.flashcardWindowIndex].show()
+
+    def nextFlashcardWindow(self):
+        self.flashcardWindows[self.flashcardWindowIndex].hide()
+        if self.flashcardWindowIndex < len(self.flashcardWindows) - 1:
+            self.flashcardWindowIndex += 1
+        else:
+            self.flashcardWindowIndex = 0
+        self.flashcardWindows[self.flashcardWindowIndex].show()
+
+    def previousFlashcardWindow(self):
+        self.flashcardWindows[self.flashcardWindowIndex].hide()
+        if self.flashcardWindowIndex > 0:
+            self.flashcardWindowIndex -= 1
+        else:
+            self.flashcardWindowIndex = len(self.flashcardWindows) - 1
+        self.flashcardWindows[self.flashcardWindowIndex].show()
 
     def load_ui(self):
         loader = QUiLoader()
@@ -285,14 +305,9 @@ class MainWindow(QMainWindow):
         info.setWindowTitle("About")
         info.exec_() #execute that window
 
-    def openSyllabiWindow(self):
-        foo = 2
-
-    def hideSyllabiWidget(self):
-        foo = 2
-
-    def showSyllabiWidget(self):
-        foo = 2
+    def openCurriculumWindow(self):
+        self.curriculumWindow = curriculum.CurriculumWindow()
+        self.curriculumWindow.show()
 
     def deleteUser(self):
         if testOnline() == False:

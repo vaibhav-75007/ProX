@@ -3,6 +3,8 @@ from PySide2.QtGui import QPalette, QBrush, QColor
 from PySide2.QtCore import Qt, Signal, Slot
 import copy
 
+#work on mechanism for hiding and showing flashcard windows for scrolling
+
 class FlashCard():
     def __init__(self, subject, front_text,back_text):
         self.subject = subject
@@ -90,6 +92,8 @@ class FlashCardWindow(QMainWindow):
         self.stack = QStackedWidget(self)
         self.next = QPushButton("Next",self)
         self.flip = QPushButton("Flip",self)
+        self.nextCollection = QPushButton("Next Set",self)
+        self.previousCollection = QPushButton("Previous Set",self)
 
         self.setStack(index)
 
@@ -98,6 +102,8 @@ class FlashCardWindow(QMainWindow):
         self.layout.addWidget(self.stack,0,0,2,2)
         self.layout.addWidget(self.flip,1,0,1,1)
         self.layout.addWidget(self.next,1,1,1,1)
+        self.layout.addWidget(self.previousCollection,2,0,1,1)
+        self.layout.addWidget(self.nextCollection,2,1,1,1)
 
         self.stack.show()
 
@@ -129,14 +135,11 @@ class FlashCardWindow(QMainWindow):
         self.close = QAction("Close Window",self)
         self.create = QAction("Create Flashcard",self)
         self.delete = QAction("Delete Flashcard",self)
-        self.deleteSet = QAction("Delete Flashcard Set",self)
-        self.addSet = QAction("Create Flashcard Set",self)
 
         self.file.addAction(self.about)
         self.file.addAction(self.close)
         self.edit.addAction(self.create)
         self.edit.addAction(self.delete)
-        self.edit.addAction(self.deleteSet)
 
     def disconnectStackCard(self):
         self.flip.released.disconnect(self.stack.widget(self.index).flip)
@@ -171,7 +174,7 @@ class FlashCardCreateWindow(QMainWindow):
         self.subjectInput = QLineEdit()
         self.frontInput = QLineEdit()
         self.backInput = QLineEdit()
-        self.done = QPushButton()
+        self.done = QPushButton("+")
 
         self.frontInput.textChanged.connect(self.preview)
         self.backInput.textChanged.connect(self.preview)
@@ -188,6 +191,7 @@ class FlashCardCreateWindow(QMainWindow):
 
         self.setLayout(self.layout)
         self.setFixedSize(400,300)
+        self.setWindowTitle("Create Flashcards")
         self.show()
 
     def preview(self):
@@ -237,7 +241,7 @@ class FlashCardDeleteWindow(QMainWindow):
         self.back.setText(flashcards[self.index].back_text)
 
     def nextCard(self):
-        if self.index < len(flashcards):
+        if self.index < len(flashcards) - 1:
             self.index += 1
         else:
             self.index = 0
@@ -245,7 +249,7 @@ class FlashCardDeleteWindow(QMainWindow):
         self.showCard()
 
     def previousCard(self):
-        if self.index > -1:
+        if self.index > 0:
             self.index -= 1
         else:
             self.index = len(flashcards) - 1
