@@ -29,7 +29,7 @@ class Task:
         return {
                 "name":self.name,
                 "description":self.description,
-                "deadline":str(self.deadline.year) + '/' + str(self.deadline.month) + '/' + str(self.deadline.day)
+                "deadline":str(self.deadline.year) + '/' + str(self.deadline.month) + '/' + str(self.deadline.day) + ' 23:59:59'
                }
 
     def getDeadline(self):
@@ -67,7 +67,7 @@ class TaskWidget(QListWidgetItem):
 class ToDoList(QListWidget):
     def __init__(self,tasks,*args,**kwargs):
         super(ToDoList,self).__init__(*args,**kwargs)
-        if tasks[0] == None:
+        if len(tasks) == 0:
             self.tasks = []
             self.checkBoxes = []
             return
@@ -103,8 +103,7 @@ class ToDoList(QListWidget):
         tasks.remove(self.tasks[index])
         self.tasks.pop(index)
         if len(tasks) == 0:
-            tasks.append(None)
-            js.writeAll()
+            js.writeAll(user.user,curriculum.curriculums,tasks,flash.flashcards)
             return
 
         js.writeAll(user.user,curriculum.curriculums,tasks,flash.flashcards)
@@ -118,10 +117,6 @@ class ToDoList(QListWidget):
     def addTask(self,task):    
         if task.name == "" or task.description == "":
             return
-
-        if len(self.tasks) > 0:
-            if self.tasks[0] == None:
-                self.tasks = []
 
         self.tasks.append(task)
         tasks.append(task)

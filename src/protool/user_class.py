@@ -20,6 +20,7 @@ class User():
                 "name":self.name,
                 "email":self.email,
                 "pin":self.pin,
+                "productivity_score":self.productivity_score,
                 "task_completion_rate":self.task_completion_rate,
                 "missed_deadline":self.deadlines_missed,
                 "weekly_productivity_score":self.week_productivity_score,

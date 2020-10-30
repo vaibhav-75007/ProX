@@ -148,6 +148,7 @@ class MainWindow(QMainWindow):
             try:
                 r = requests.get('http://0.0.0.0:54321/' + str(user.user.id) + '/' + str(user.user.pin) + '/everyone/')
                 self.users = [user.User(dictionary["name"],0,dictionary["task_completion_rate"],dictionary["missed_deadline"],dictionary["weekly_productivity_score"],dictionary["weekly_task_completion_rate"],dictionary["weekly_deadlines_missed"],0,0,0) for dictionary in r.json()]
+                self.users.append(user.user)
                 print([user.name for user in self.users])
             except TypeError:
                 print("Your user account is not on the database")
@@ -178,6 +179,10 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("ProX")
 
+        if testOnline() == True:
+            r = requests.put('http://0.0.0.0:54321/' + str(user.user.id) + '/' + str(user.user.pin) + '/',json=js.toJson(user.user,curriculum.curriculums,task.tasks,flash.flashcards))
+            print(r.status_code)
+
     def initMenu(self): #set up the menu bar, with File, syllabi and leaderboard
         self.filemenu = self.menu.addMenu("&File")
         self.syllabimenu = self.menu.addMenu("&Syllabi")
@@ -202,6 +207,7 @@ class MainWindow(QMainWindow):
 
         self.filemenu.addAction(self.about)
         self.filemenu.addAction(self.exit)
+        self.filemenu.addAction(self.delete)
         self.syllabimenu.addAction(self.view)
         self.syllabimenu.addAction(self.hideSyllabi)
         self.syllabimenu.addAction(self.showSyllabi)
@@ -253,8 +259,10 @@ class MainWindow(QMainWindow):
 
     def makeFlashCardWindows(self,flashcards):
         self.flashcardWindows = []
-        if flash.flashcards[0] == None:
-            inputFlashcardInfo()
+        if len(flash.flashcards) == 0:
+            self.inputFlashcardInfo()
+            if len(flash.flashcards) == 0:
+                return
 
         flashcardsNew = flash.sortFlashcards(flashcards)
         for section in range(len(flashcardsNew)):
@@ -287,9 +295,11 @@ class MainWindow(QMainWindow):
         foo = 2
 
     def deleteUser(self):
-        with open("data.json",'wt') as filee:
+        if testOnline() == False:
+            return
+        with open("data.json",'wt') as file:
             file.write("")
-        #call delete user on database
+        r = requests.delete('http://0.0.0.0:54321/' + str(user.user.id) + '/' + str(user.user.pin) + '/')
 
 
 if __name__ == "__main__":

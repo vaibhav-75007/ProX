@@ -73,15 +73,15 @@ class FirstTimeWindow(QDialog):
         newUser = r.json()
 
         user.user = user.User(idNo=newUser["id"],name=newUser["name"],email=newUser["email"],pin=newUser["pin"],deadlines_missed=0,task_completion_rate=0,productivity_score=0,week_task_completion_rate=0,week_productivity_score=0,week_deadline_missed=0)
-        flash.flashcards = [None]
-        task.tasks = [None]
-        curriculum.curriculums = [None]
+        flash.flashcards = []
+        task.tasks = []
+        curriculum.curriculums = []
 
         with open("data.json",'wt') as file:
             string = user.user.__dict__()
-            string["tasks"] = [None]
-            string["flashcards"] = [None]
-            string["curriculums"] = [None]
+            string["tasks"] = []
+            string["flashcards"] = []
+            string["curriculums"] = []
             file.write(json.dumps(string))
 
         self.hide()
@@ -97,3 +97,5 @@ class FirstTimeWindow(QDialog):
         curriculum.curriculums = [curriculum.Curriculum(name=tempDict["name"],subject=tempDict["subject"],topics=tempDict["topics"]) for tempDict in recoveredUser["curriculums"]]
 
         js.writeAll(user.user,curriculum.curriculums,task.tasks,flash.flashcards)
+
+        self.close()
