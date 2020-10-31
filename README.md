@@ -10,9 +10,9 @@ This is the repository that will be used in the Tech with Tim code jam from Octo
 The **theme** of the Code Jam was **"for students"**
 
 ### License
-This open source project is under the Apache 2.0 license, you can read it in the [LICENSE](https://github.com/vaibhav-75007/TimathonCodeJamOct/blob/main/LICENSE) file of this repository.
+This open source project is under the Gnu General Public license v3.0, you can read it in the [LICENSE](https://github.com/vaibhav-75007/TimathonCodeJamOct/blob/main/LICENSE) file of this repository.
 
-You can read **the Apache 2.0 License** [here](https://www.apache.org/licenses/LICENSE-2.0)
+You can read **the Gnu General Public license v3.0** [here](https://www.gnu.org/licenses/gpl-3.0.txt)
 ```
 This file is part of ProX.
 
