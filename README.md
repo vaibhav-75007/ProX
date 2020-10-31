@@ -1,5 +1,5 @@
 <h1 align="center">ProX</h1>
-<p align="center"><img alt="Hex.pm" src="https://img.shields.io/hexpm/l/plug?color=green&label=LICENSE"></p>
+<p align="center"><img alt="Hex.pm" src="https://img.shields.io/github/license/vision-05/ProX?color=green"></p>
 <p align="center">
     <img alt="forks" src="https://img.shields.io/github/forks/vaibhav-75007/TimathonCodeJamOct?label=Forks&style=social"/>
     <img alt="stars" src="https://img.shields.io/github/stars/vaibhav-75007/TimathonCodeJamOct?style=social"/>
