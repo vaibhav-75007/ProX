@@ -146,7 +146,7 @@ class MainWindow(QMainWindow):
         try:
             js.readAll()
             js.readDateLastOn()
-        except Exception:
+        except:
             os.remove("data.json")
             os.remove("date.txt")
             sys.exit() #if there is an error with any of the reading, exit the app and delete the jsons, user can start again
