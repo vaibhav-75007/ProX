@@ -3,8 +3,6 @@ from PySide2.QtGui import QPalette, QBrush, QColor
 from PySide2.QtCore import Qt, Signal, Slot
 import copy
 
-#work on mechanism for hiding and showing flashcard windows for scrolling
-
 class FlashCard():
     def __init__(self, subject, front_text,back_text):
         self.subject = subject
@@ -48,7 +46,7 @@ class FlashCardWidget(QWidget):
 
         self.show()
 
-    def flip(self):
+    def flip(self): #"flip" the flashcard by changing text shown
         if self.flipped == False:
             self.label.setText(self.flashcard.back_text)
             self.flipped = True
@@ -56,13 +54,13 @@ class FlashCardWidget(QWidget):
         self.label.setText(self.flashcard.front_text)
         self.flipped = False
 
-def sortFlashcards(flashcards):
+def sortFlashcards(flashcards): #sort flashcard into lists of subjects
     subjects = []
     for flashcard in flashcards:
         if flashcard.subject not in subjects:
             subjects.append(flashcard.subject)
 
-            flashcardsNew = copy.deepcopy(subjects)
+            flashcardsNew = copy.deepcopy(subjects) #deepcopy so they are separate lists, very important at this stage
 
     temp = []
     for i in range(len(subjects)):
@@ -89,7 +87,7 @@ class FlashCardWindow(QMainWindow):
         self.layout = QGridLayout(self.centralWidget)
         self.setLayout(self.layout)
 
-        self.stack = QStackedWidget(self)
+        self.stack = QStackedWidget(self) #store flashcards in a stack
         self.next = QPushButton("Next",self)
         self.flip = QPushButton("Flip",self)
         self.nextCollection = QPushButton("Next Set",self)
@@ -113,7 +111,7 @@ class FlashCardWindow(QMainWindow):
         self.setWindowTitle(self.flashcards[index][0].subject + " Flashcards")
         self.show()
 
-    def setStack(self,index):
+    def setStack(self,index): #set up the stack
         self.index = 0
         for flashcard in self.flashcards[index]:
             self.stack.addWidget(FlashCardWidget(flashcard))
@@ -144,7 +142,7 @@ class FlashCardWindow(QMainWindow):
     def disconnectStackCard(self):
         self.flip.released.disconnect(self.stack.widget(self.index).flip)
 
-    def nextCard(self):
+    def nextCard(self): #go to next card weith endless scrolling
         self.flip.released.disconnect(self.stack.widget(self.index).flip)
 
         if self.index > 0:
@@ -155,7 +153,7 @@ class FlashCardWindow(QMainWindow):
         self.stack.setCurrentIndex(self.index)
         self.flip.released.connect(self.stack.widget(self.index).flip)
 
-class FlashCardCreateWindow(QMainWindow):
+class FlashCardCreateWindow(QMainWindow): #window to create flashcards
     def __init__(self,*args,**kwargs):
         super(FlashCardCreateWindow,self).__init__(*args,**kwargs)
 
@@ -198,7 +196,7 @@ class FlashCardCreateWindow(QMainWindow):
         self.front.setText(self.frontInput.text())
         self.back.setText(self.backInput.text())
 
-class FlashCardDeleteWindow(QMainWindow):
+class FlashCardDeleteWindow(QMainWindow): #window to delete flashcards
     def __init__(self,*args,**kwargs):
         super(FlashCardDeleteWindow,self).__init__(*args,**kwargs)
 

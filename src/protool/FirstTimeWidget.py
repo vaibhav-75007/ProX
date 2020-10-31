@@ -1,5 +1,5 @@
 # This Python file uses the following encoding: utf-8
-from PySide2.QtWidgets import QDialog,QDialogButtonBox,QLineEdit,QFormLayout,QHBoxLayout,QVBoxLayout,QLabel
+from PySide2.QtWidgets import QDialog,QDialogButtonBox,QLineEdit,QFormLayout,QHBoxLayout,QVBoxLayout,QLabel,QDialog
 import json
 import requests
 import user_class as user
@@ -20,6 +20,9 @@ class FirstTimeWindow(QDialog):
 
         self.layout = QVBoxLayout()
         self.form = QHBoxLayout()
+        self.description = QHBoxLayout()
+        self.description.addWidget(QLabel("Login"))
+        self.description.addWidget(QLabel("Sign Up"))
 
         self.loginForm = QFormLayout()
         self.signupForm = QFormLayout()
@@ -41,6 +44,7 @@ class FirstTimeWindow(QDialog):
         self.form.addLayout(self.loginForm)
         self.form.addLayout(self.signupForm)
 
+        self.layout.addLayout(self.description)
         self.layout.addLayout(self.form)
 
         self.button = QDialogButtonBox(QDialogButtonBox.Cancel | QDialogButtonBox.Ok)
@@ -52,16 +56,22 @@ class FirstTimeWindow(QDialog):
 
         self.setLayout(self.layout)
 
-    def checkCredentials(self):
+    def checkCredentials(self): #validate data
         while True:
-            if self.signupUsername.text() != "" and self.signupPasswords[0].text() != "" and self.signupPasswords[1].text() != "" and self.signupEmail.text() != "" and isinstance(int(self.signupPasswords[0].text()),int):
-                self.signup()
-                break
-            elif self.loginUsername.text() != "" and self.loginPassword != "" and isinstance(int(self.loginPassword.text()),int):
-                self.login()
-                break
+            try:
+                if self.signupUsername.text() != "" and self.signupPasswords[0].text() != "" and self.signupPasswords[1].text() != "" and self.signupEmail.text() != "" and isinstance(int(self.signupPasswords[0].text()),int):
+                    self.signup()
+                    break
+                elif self.loginUsername.text() != "" and self.loginPassword != "" and isinstance(int(self.loginPassword.text()),int): #make sure the pin entered is an int
+                    self.login()
+                    break
+            except TypeError:
+                dialog = QDialog()
+                dialog.setWindowTitle("Pin must be a number")
+                dialog.setText("Your pin must be a number!")
+                dialog.exec_()
 
-    def signup(self):
+    def signup(self): #for creating new account
         if self.signupPasswords[0].text() != self.signupPasswords[1].text():
             return
 
@@ -88,7 +98,7 @@ class FirstTimeWindow(QDialog):
         js.writeDateLastOn()
         self.hide()
 
-    def login(self):
+    def login(self): #for recovering from an existing account
         data = {"pin":int(self.loginPassword.text()),"email":self.loginUsername.text()}
         r = requests.get('http://0.0.0.0:54321/recover/',json=data)
         print(r.status_code)

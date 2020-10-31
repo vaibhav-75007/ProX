@@ -67,11 +67,11 @@ class User():
     def  decrease_week_deadline_missed(self,score):
         self.week_deadline_missed-= score
 
-class UserListItem(QListWidgetItem):
+class UserListItem(QListWidgetItem): #stores user data in neat item to store in leaderboard
     def __init__(self, user, *args, **kwargs):
         super(UserListItem,self).__init__(*args,**kwargs)
 
-        self.formattedText = {
+        self.formattedText = { #format the text
         "name": "Username: " + user.name + '\n',
         "proScore": "Productivity Score: " + str(user.productivity_score) + '\n',
         "taskComp": "Tasks Completed: " + str(user.task_completion_rate) + '\n',
@@ -101,7 +101,7 @@ class UserListItem(QListWidgetItem):
     def getProWeekScore(self):
         return self.user.week_productivity_score
 
-class LeaderBoard(QListWidget):
+class LeaderBoard(QListWidget): #list widget to store the users, only refreshes when app restarts
     def __init__(self, users, parent, *args, **kwargs):
         super(LeaderBoard,self).__init__(parent=parent,*args,**kwargs)
         for user in users:
