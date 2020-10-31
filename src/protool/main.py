@@ -107,7 +107,7 @@ def ping():
     r = requests.get('http://0.0.0.0:54321/')
     print(r.status_code)
 
-def testOnline():
+def testOnline(): #ping the server 5 times to check if online
     try:
         for i in range(5):
             ping()
@@ -123,13 +123,16 @@ class MainWindow(QMainWindow):
             if testOnline() == False:
                 sys.exit()
 
-            loginWindow = first.FirstTimeWindow()
+            loginWindow = first.FirstTimeWindow() #go to first time menu
             loginWindow.exec_()
 
-        #cases for if file is empty or invalid data
-
-        js.readAll()
-        js.readDateLastOn()
+        try:
+            js.readAll()
+            js.readDateLastOn()
+        except Exception:
+            os.remove("data.json")
+            os.remove("date.txt")
+            sys.exit() #if there is an error with any of the reading, exit the app and delete the jsons, user can start again
 
         self.load_ui()
         self.setFixedSize(1200,800)
@@ -144,13 +147,12 @@ class MainWindow(QMainWindow):
         self.appended = False
 
         if testOnline() == False:
-            self.users = [user.user]
+            self.users = [user.user] #if db offline the leaderboard is just their user
         else:
             try:
                 r = requests.get('http://0.0.0.0:54321/' + str(user.user.id) + '/' + str(user.user.pin) + '/everyone/')
                 self.users = [user.User(dictionary["name"],0,dictionary["task_completion_rate"],dictionary["missed_deadline"],dictionary["weekly_productivity_score"],dictionary["weekly_task_completion_rate"],dictionary["weekly_deadlines_missed"],0,0,0) for dictionary in r.json()]
-                self.users.append(user.user)
-                print([user.name for user in self.users])
+                self.users.append(user.user) #put all users on the leaderboard
             except TypeError:
                 print("Your user account is not on the database")
                 self.users = [user.user]
@@ -161,15 +163,15 @@ class MainWindow(QMainWindow):
         self.layout.addItem(self.spacer,0,2,1,1)
 
         self.tasks = task.tasks
-        self.todo = task.ToDoList(self.tasks)
+        self.todo = task.ToDoList(self.tasks) #create the todo list
         self.layout.addWidget(self.todo,0,3,1,1)
 
         self.layout.addItem(self.spacer1,0,4,1,1)
 
-        self.taskInputField = task.TaskInputFieldWidget()
+        self.taskInputField = task.TaskInputFieldWidget() #create the input field for the todo list
         self.layout.addWidget(self.taskInputField,1,3,1,1)
 
-        self.setLayout(self.layout)
+        self.setLayout(self.layout) #initialise the menubar
         self.menu = self.menuBar()
         self.initMenu()
 
@@ -180,7 +182,7 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("ProX")
 
-        if testOnline() == True:
+        if testOnline() == True: #update any offline changes to the database
             r = requests.put('http://0.0.0.0:54321/' + str(user.user.id) + '/' + str(user.user.pin) + '/',json=js.toJson(user.user,curriculum.curriculums,task.tasks,flash.flashcards))
             print(r.status_code)
 
@@ -208,75 +210,76 @@ class MainWindow(QMainWindow):
         self.flashcardmenu.addAction(self.openFlashcards)
 
     def deleteAccount(self):
-        if testOnline() == False:
+        if testOnline() == False: #user account can only be deleted when online
             print("Db offline")
             return
         r = requests.delete('http://0.0.0.0:54321/' + str(user.user.id) + '/' + str(user.user.pin) + '/')
         os.remove("data.json")
+        os.remove("date.txt")
         sys.exit()
 
     def showFlashcards(self):
         self.makeFlashCardWindows(self.flashcards)
 
     def inputFlashcardInfo(self):
-        self.creator = flash.FlashCardCreateWindow()
+        self.creator = flash.FlashCardCreateWindow() #create instance of flashcard creator
         self.creator.show()
-        self.creator.done.released.connect(self.makeNewFlashcard)
+        self.creator.done.released.connect(self.makeNewFlashcard) #connect done button to creation of flashcard
 
     def makeNewFlashcard(self):
-        if self.creator.subjectInput.text() == "" or self.creator.frontInput.text() == "" or self.creator.backInput.text() == "":
+        if self.creator.subjectInput.text() == "" or self.creator.frontInput.text() == "" or self.creator.backInput.text() == "": #presence check
             return
 
         self.flashcards.append(flash.FlashCard(self.creator.subjectInput.text(),self.creator.frontInput.text(),self.creator.backInput.text()))
-        flash.flashcards = self.flashcards
+        flash.flashcards = self.flashcards #create the new flashcard
         js.writeAll(user.user,curriculum.curriculums,task.tasks,flash.flashcards)
 
         for flashcardWindow in self.flashcardWindows:
-            flashcardWindow.create.triggered.disconnect(self.inputFlashcardInfo)
+            flashcardWindow.create.triggered.disconnect(self.inputFlashcardInfo) #reset the flashcard windows
             flashcardWindow.delete.triggered.disconnect(self.deleteFlashcard)
 
-        self.creator.subjectInput.clear()
+        self.creator.subjectInput.clear() #clear the input fields for the creator
         self.creator.frontInput.clear()
         self.creator.backInput.clear()
 
         self.flashcardWindows.clear()
-        self.makeFlashCardWindows(self.flashcards)
+        self.makeFlashCardWindows(self.flashcards) #recreate the flashcard windows
         self.creator.hide()
-        self.creator.show()
+        self.creator.show() #put the creator back on top
 
     def deleteFlashcard(self):
-        self.deleter = flash.FlashCardDeleteWindow()
+        self.deleter = flash.FlashCardDeleteWindow() #create a deleter
         self.deleter.show()
         self.deleter.buttonConfirm.released.connect(self.removeFlashcard)
 
     def removeFlashcard(self):
-        self.flashcards.pop(self.deleter.index)
+        self.flashcards.pop(self.deleter.index) #remove the flashcards from the json and flashcard list
         js.writeAll(user.user,curriculum.curriculums,task.tasks,flash.flashcards)
-        self.deleter.close()
-        self.makeFlashCardWindows(self.flashcards)
+        self.deleter.close() #close the deleter
+        self.makeFlashCardWindows(self.flashcards) #reset the flashcard windows
 
     def makeFlashCardWindows(self,flashcards):
         self.flashcardWindowIndex = 0
         self.flashcardWindows = []
-        if len(flash.flashcards) == 0:
+        if len(flash.flashcards) == 0: #if there are no flashcards prompt user to create them
             self.inputFlashcardInfo()
-            if len(flash.flashcards) == 0:
+            if len(flash.flashcards) == 0: #if user doesnt make flashcards exit the window
                 return
 
-        flashcards = flash.sortFlashcards(flashcards)
+        flashcards = flash.sortFlashcards(flashcards) #sort the flashcards by subject
         for section in range(len(flashcards)):
-            self.flashcardWindows.append(flash.FlashCardWindow(flashcards,section))
+            self.flashcardWindows.append(flash.FlashCardWindow(flashcards,section)) #create a window for each subject of flashcards
 
-        for flashcardWindow in self.flashcardWindows:
+        for flashcardWindow in self.flashcardWindows: #connect all the buttons and menus
             flashcardWindow.create.triggered.connect(self.inputFlashcardInfo)
             flashcardWindow.delete.triggered.connect(self.deleteFlashcard)
             flashcardWindow.nextCollection.released.connect(self.nextFlashcardWindow)
             flashcardWindow.previousCollection.released.connect(self.previousFlashcardWindow)
-            flashcardWindow.hide()
+            flashcardWindow.hide() #hide all the windows
 
-        self.flashcardWindows[self.flashcardWindowIndex].show()
+        self.flashcardWindows[self.flashcardWindowIndex].show() #show only one of the windows
 
-    def nextFlashcardWindow(self):
+    def nextFlashcardWindow(self): #endless scrolling to navigate between flashcard windows
         self.flashcardWindows[self.flashcardWindowIndex].hide()
         if self.flashcardWindowIndex < len(self.flashcardWindows) - 1:
             self.flashcardWindowIndex += 1
@@ -284,7 +287,7 @@ class MainWindow(QMainWindow):
             self.flashcardWindowIndex = 0
         self.flashcardWindows[self.flashcardWindowIndex].show()
 
-    def previousFlashcardWindow(self):
+    def previousFlashcardWindow(self): #endless scrolling to navigate between flashcard windows
         self.flashcardWindows[self.flashcardWindowIndex].hide()
         if self.flashcardWindowIndex > 0:
             self.flashcardWindowIndex -= 1
@@ -292,7 +295,7 @@ class MainWindow(QMainWindow):
             self.flashcardWindowIndex = len(self.flashcardWindows) - 1
         self.flashcardWindows[self.flashcardWindowIndex].show()
 
-    def load_ui(self):
+    def load_ui(self): #automatically created to load the ui
         loader = QUiLoader()
         path = os.path.join(os.path.dirname(__file__), "form.ui")
         ui_file = QFile(path)
@@ -305,16 +308,9 @@ class MainWindow(QMainWindow):
         info.setWindowTitle("About")
         info.exec_() #execute that window
 
-    def openCurriculumWindow(self):
+    def openCurriculumWindow(self): #open the window of the curriculums
         self.curriculumWindow = curriculum.CurriculumWindow()
         self.curriculumWindow.show()
-
-    def deleteUser(self):
-        if testOnline() == False:
-            return
-        with open("data.json",'wt') as file:
-            file.write("")
-        r = requests.delete('http://0.0.0.0:54321/' + str(user.user.id) + '/' + str(user.user.pin) + '/')
 
 
 if __name__ == "__main__":

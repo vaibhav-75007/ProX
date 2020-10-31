@@ -1,5 +1,6 @@
 # This Python file uses the following encoding: utf-8
 from PySide2.QtWidgets import QMainWindow,QLineEdit,QFormLayout,QDialogButtonBox,QWidget,QListWidget,QListWidgetItem,QStackedWidget,QMenu,QAction,QVBoxLayout,QPushButton,QLabel,QHBoxLayout
+from PySide2.QtGui import QBrush, QColor
 import jsonUtil as js
 import user_class as user
 import Task as task
@@ -18,7 +19,7 @@ class Curriculum:
             "topics":self.topics
         }
 
-class CurriculumCreateWindow(QMainWindow):
+class CurriculumCreateWindow(QMainWindow): #almost same mechanism as flashcard creator
     def __init__(self,*args,**kwargs):
         super(CurriculumCreateWindow,self).__init__(*args,**kwargs)
         self.centralWidget = QWidget()
@@ -42,8 +43,9 @@ class CurriculumCreateWindow(QMainWindow):
         self.setLayout(self.layout)
 
         self.setWindowTitle("Create Curriculum")
+        self.setFixedSize(300,200)
 
-    def addInput(self):
+    def addInput(self): #when first topic input is changed, create a new one
         self.topicsInput.append(QLineEdit())
         self.topicsInput[self.currentConnected].textChanged.disconnect(self.addInput)
         self.currentConnected += 1
@@ -51,7 +53,7 @@ class CurriculumCreateWindow(QMainWindow):
 
         self.form.addRow(QLabel(""),self.topicsInput[-1])
 
-class CurriculumDeleteWindow(QMainWindow):
+class CurriculumDeleteWindow(QMainWindow): #same mechanism as flashcard deleter
     def __init__(self,*args,**kwargs):
         super(CurriculumDeleteWindow,self).__init__(*args,**kwargs)
         self.curriculums = curriculums
@@ -144,14 +146,14 @@ class CurriculumWindow(QMainWindow):
 
         self.stack.setCurrentIndex(self.index)
 
-    def nextCurriculum(self):
+    def nextCurriculum(self): #infinite scrolling on the stack
         if self.stack.currentIndex() < self.stack.count() - 1:
             self.index += 1
         else:
             self.index = 0
         self.stack.setCurrentIndex(self.index)
 
-    def previousCurriculum(self):
+    def previousCurriculum(self): #infinite scrolling on the stack
         if self.stack.currentIndex() > 0:
             self.index -= 1
         else:
@@ -172,12 +174,12 @@ class CurriculumWindow(QMainWindow):
 
         self.setFixedSize(400,300)
 
-    def addCurriculumCreator(self):
+    def addCurriculumCreator(self): #create the creator
         self.creator = CurriculumCreateWindow()
         self.creator.show()
         self.creator.done.released.connect(self.addCurriculum)
 
-    def addCurriculumDeleter(self):
+    def addCurriculumDeleter(self): #create the deleter
         if len(curriculums) == 0:
             self.close()
         self.deleter = CurriculumDeleteWindow()
@@ -185,30 +187,30 @@ class CurriculumWindow(QMainWindow):
         self.deleter.confirm.released.connect(self.deleteCurriculum)
 
     def deleteCurriculum(self):
-        curriculums.pop(self.deleter.index)
+        curriculums.pop(self.deleter.index) #just remove the widget from the stack and the curriculum from the list
         self.stack.removeWidget(self.stack.widget(self.deleter.index))
-        js.writeAll(user.user,curriculums,task.tasks,flash.flashcards)
+        js.writeAll(user.user,curriculums,task.tasks,flash.flashcards) #update changes
         self.deleter.close()
         if self.stack.count() > 0:
             self.stack.setCurrentIndex(0)
         else:
             self.close()
 
-    def addCurriculum(self):
-        if self.creator.nameInput.text() == "" or self.creator.subjectInput.text() == "":
+    def addCurriculum(self): #create curriculum with creator window
+        if self.creator.nameInput.text() == "" or self.creator.subjectInput.text() == "": #presence check
             return
         topics = [self.creator.topicsInput[i].text() for i in range(len(self.creator.topicsInput)) if self.creator.topicsInput[i].text() != ""]
-        self.curriculums.append(Curriculum(self.creator.nameInput.text(),self.creator.subjectInput.text(),topics))
-        print(self.curriculums[-1])
-        self.stack.addWidget(CurriculumWidget(self.curriculums[-1]))
+        self.curriculums.append(Curriculum(self.creator.nameInput.text(),self.creator.subjectInput.text(),topics)) #add new curriculum to the list
 
-        self.creator.nameInput.clear()
+        self.stack.addWidget(CurriculumWidget(self.curriculums[-1])) #add that same curriculum to the stack (as a widget this time)
+
+        self.creator.nameInput.clear() #clear the inputs
         self.creator.subjectInput.clear()
-        self.creator.topicsInput[-1].textChanged.disconnect(self.creator.addInput)
+        self.creator.topicsInput[-1].textChanged.disconnect(self.creator.addInput) #disconnect the lineedit from creating a new one
 
-        self.creator.topicsInput = [QLineEdit()]
+        self.creator.topicsInput = [QLineEdit()] #reset the list of lineedits
 
-        js.writeAll(user.user,curriculums,task.tasks,flash.flashcards)
+        js.writeAll(user.user,curriculums,task.tasks,flash.flashcards) #write to json
         if self.stack.count() > 0:
             self.stack.setCurrentIndex(0)
         else:
@@ -218,7 +220,7 @@ class CurriculumWindow(QMainWindow):
         self.creator.show()
 
 class CurriculumWidget(QWidget):
-    def __init__(self,curriculum,*args,**kwargs):
+    def __init__(self,curriculum,*args,**kwargs): #widget for showing a curriculum
         super(CurriculumWidget,self).__init__(*args,**kwargs)
 
         self.curriculum = curriculum
@@ -240,6 +242,9 @@ class CurriculumWidget(QWidget):
 class TopicListWidgetItem(QListWidgetItem):
     def __init__(self,name,*args,**kwargs):
         super(TopicListWidgetItem,self).__init__(*args,**kwargs)
+
+        text = QBrush(QColor.fromRgbF(0.9,0.9,0.9,1))
+        self.setForeground(text)
 
         self.setText(name)
 

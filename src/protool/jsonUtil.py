@@ -6,9 +6,6 @@ import curriculum
 import datetime
 import requests
 
-#if there is time create error handling for erroneous json data
-#work on curriculums
-
 def stringToDatetime(string):
     splitDate = string.split('/')
     return datetime.datetime(int(splitDate[0]),int(splitDate[1]),int(splitDate[2][0:2]))
@@ -46,7 +43,7 @@ def writeAll(user,curriculums,tasks,flashcards):
     print(r.status_code)
     writeDateLastOn()
 
-def toJson(user,curriculums,tasks,flashcards):
+def toJson(user,curriculums,tasks,flashcards): #convert objects to dictionaries for writing to json
     jsonString = user.__dict__()
     curriculumsString = []
     tasksString = []
@@ -67,12 +64,12 @@ def toJson(user,curriculums,tasks,flashcards):
 
     return jsonString
 
-def writeDateLastOn():
+def writeDateLastOn(): #write the date the app was last opened
     with open("date.txt",'wt') as file:
         date = datetime.datetime.now()
         file.write(f'{date.year}/{date.month}/{date.day}/{date.weekday()}')
 
-def readDateLastOn():
+def readDateLastOn(): #check if new week has started to reset weekly productivity metrics
     with open("date.txt",'r') as file:
         now = datetime.datetime.now()
         string = file.read()
