@@ -1,5 +1,5 @@
 <h1 align="center">ProX</h1>
-<p align="center"><img alt="Hex.pm" src="https://img.shields.io/hexpm/l/plug?color=green&label=LICENSE"></p>
+<p align="center"><img alt="Hex.pm" src="https://img.shields.io/github/license/vision-05/ProX?color=green"></p>
 <p align="center">
     <img alt="forks" src="https://img.shields.io/github/forks/vaibhav-75007/TimathonCodeJamOct?label=Forks&style=social"/>
     <img alt="stars" src="https://img.shields.io/github/stars/vaibhav-75007/TimathonCodeJamOct?style=social"/>
@@ -9,25 +9,28 @@
 This is the repository that will be used in the Tech with Tim code jam from October 2020, the [Timathon](https://twtcodejam.net/).
 The **theme** of the Code Jam was **"for students"**
 
+This project was built using pyqt5 community edition, an open source gui framework from the Qt Company which you can find at this link: [QT5](https://www.qt.io/)
+
 ### License
-This open source project is under the Apache 2.0 license, you can read it in the [LICENSE](https://github.com/vaibhav-75007/TimathonCodeJamOct/blob/main/LICENSE) file of this repository.
+This open source project is under the Gnu General Public license v3.0, you can read it in the [LICENSE](https://github.com/vaibhav-75007/TimathonCodeJamOct/blob/main/LICENSE) file of this repository.
 
-You can read **the Apache 2.0 License** [here](https://www.apache.org/licenses/LICENSE-2.0)
+You can read **the Gnu General Public license v3.0** [here](https://www.gnu.org/licenses/gpl-3.0.txt)
 ```
-Copyright 2020 discord-ia team
+This file is part of ProX.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+ProX is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-    http://www.apache.org/licenses/LICENSE-2.0
+ProX is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-```
+You should have received a copy of the GNU General Public License
+along with ProX.  If not, see <https://www.gnu.org/licenses/>
+
 ### Contributors
 | Name | Social media links |
 |------|--------------------|
