@@ -56,7 +56,7 @@ def writeAll(user,curriculums,tasks,flashcards):
     with open("data.json",'wt') as file:
         file.write(json.dumps(jsonString))
 
-    r = requests.put('http://15.237.110.189:5000/' + str(user.id) + '/' + str(user.pin) + '/',json=jsonString)
+    r = requests.put('http://0.0.0.0:54321/' + str(user.id) + '/' + str(user.pin) + '/',json=jsonString)
     print(r.status_code)
     writeDateLastOn()
 

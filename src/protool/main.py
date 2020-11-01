@@ -121,7 +121,7 @@ QLabel {
 """
 
 def ping():
-    r = requests.get('http://15.237.110.189:5000/')
+    r = requests.get('http://0.0.0.0:54321/')
     print(r.status_code)
 
 def testOnline(): #ping the server 5 times to check if online
@@ -166,7 +166,7 @@ class MainWindow(QMainWindow):
             self.users = [user.user] #if db offline the leaderboard is just their user
         else:
             try:
-                r = requests.get('http://15.237.110.189:5000/' + str(user.user.id) + '/' + str(user.user.pin) + '/everyone/')
+                r = requests.get('http://0.0.0.0:54321/' + str(user.user.id) + '/' + str(user.user.pin) + '/everyone/')
                 self.users = [user.User(dictionary["name"],0,dictionary["task_completion_rate"],dictionary["missed_deadline"],dictionary["weekly_productivity_score"],dictionary["weekly_task_completion_rate"],dictionary["weekly_deadlines_missed"],0,0,0) for dictionary in r.json()]
                 self.users.append(user.user) #put all users on the leaderboard
             except TypeError:
@@ -199,7 +199,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("ProX")
 
         if testOnline() == True: #update any offline changes to the database
-            r = requests.put('http://15.237.110.189:5000/' + str(user.user.id) + '/' + str(user.user.pin) + '/',json=js.toJson(user.user,curriculum.curriculums,task.tasks,flash.flashcards))
+            r = requests.put('http://0.0.0.0:54321/' + str(user.user.id) + '/' + str(user.user.pin) + '/',json=js.toJson(user.user,curriculum.curriculums,task.tasks,flash.flashcards))
             print(r.status_code)
 
     def initMenu(self): #set up the menu bar, with File, syllabi and leaderboard
