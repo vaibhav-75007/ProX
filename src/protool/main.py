@@ -151,7 +151,6 @@ class MainWindow(QMainWindow):
             os.remove("date.txt")
             sys.exit() #if there is an error with any of the reading, exit the app and delete the jsons, user can start again
 
-        self.load_ui()
         self.setFixedSize(1200,800)
         self.centralWidget = QWidget()
 
