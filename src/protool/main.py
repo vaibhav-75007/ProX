@@ -1,3 +1,20 @@
+'''
+This file is part of ProX.
+
+ProX is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ProX is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ProX.  If not, see <https://www.gnu.org/licenses/>
+'''
+
 # This Python file uses the following encoding: utf-8
 import sys
 import os
@@ -129,7 +146,7 @@ class MainWindow(QMainWindow):
         try:
             js.readAll()
             js.readDateLastOn()
-        except Exception:
+        except:
             os.remove("data.json")
             os.remove("date.txt")
             sys.exit() #if there is an error with any of the reading, exit the app and delete the jsons, user can start again
