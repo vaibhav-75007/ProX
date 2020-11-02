@@ -229,7 +229,7 @@ class MainWindow(QMainWindow):
         if testOnline() == False: #user account can only be deleted when online
             print("Db offline")
             return
-        r = requests.delete('http://15.237.110.189:5000/' + str(user.user.id) + '/' + str(user.user.pin) + '/')
+        r = requests.delete('http://0.0.0.0:54321/' + str(user.user.id) + '/' + str(user.user.pin) + '/')
         os.remove("data.json")
         os.remove("date.txt")
         sys.exit()
