@@ -121,7 +121,7 @@ QLabel {
 """
 
 def ping():
-    r = requests.get('http://0.0.0.0:54321/')
+    r = requests.get('http://15.237.110.189:5000/')
     print(r.status_code)
 
 def testOnline(): #ping the server 5 times to check if online
@@ -151,7 +151,6 @@ class MainWindow(QMainWindow):
             os.remove("date.txt")
             sys.exit() #if there is an error with any of the reading, exit the app and delete the jsons, user can start again
 
-        self.load_ui()
         self.setFixedSize(1200,800)
         self.centralWidget = QWidget()
 
@@ -167,8 +166,8 @@ class MainWindow(QMainWindow):
             self.users = [user.user] #if db offline the leaderboard is just their user
         else:
             try:
-                r = requests.get('http://0.0.0.0:54321/' + str(user.user.id) + '/' + str(user.user.pin) + '/everyone/')
-                self.users = [user.User(dictionary["name"],0,dictionary["task_completion_rate"],dictionary["missed_deadline"],dictionary["weekly_productivity_score"],dictionary["weekly_task_completion_rate"],dictionary["weekly_deadlines_missed"],0,0,0) for dictionary in r.json()]
+                r = requests.get('http://15.237.110.189:5000/' + str(user.user.id) + '/' + str(user.user.pin) + '/everyone/')
+                self.users = [user.User(dictionary["name"],dictionary["productivity_score"],dictionary["task_completion_rate"],dictionary["missed_deadline"],dictionary["weekly_productivity_score"],dictionary["weekly_task_completion_rate"],dictionary["weekly_deadlines_missed"],0,0,0) for dictionary in r.json()]
                 self.users.append(user.user) #put all users on the leaderboard
             except TypeError:
                 print("Your user account is not on the database")
@@ -200,7 +199,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("ProX")
 
         if testOnline() == True: #update any offline changes to the database
-            r = requests.put('http://0.0.0.0:54321/' + str(user.user.id) + '/' + str(user.user.pin) + '/',json=js.toJson(user.user,curriculum.curriculums,task.tasks,flash.flashcards))
+            r = requests.put('http://15.237.110.189:5000/' + str(user.user.id) + '/' + str(user.user.pin) + '/',json=js.toJson(user.user,curriculum.curriculums,task.tasks,flash.flashcards))
             print(r.status_code)
 
     def initMenu(self): #set up the menu bar, with File, syllabi and leaderboard
@@ -230,7 +229,7 @@ class MainWindow(QMainWindow):
         if testOnline() == False: #user account can only be deleted when online
             print("Db offline")
             return
-        r = requests.delete('http://0.0.0.0:54321/' + str(user.user.id) + '/' + str(user.user.pin) + '/')
+        r = requests.delete('http://15.237.110.189:5000/' + str(user.user.id) + '/' + str(user.user.pin) + '/')
         os.remove("data.json")
         os.remove("date.txt")
         sys.exit()
@@ -311,14 +310,6 @@ class MainWindow(QMainWindow):
         else:
             self.flashcardWindowIndex = len(self.flashcardWindows) - 1
         self.flashcardWindows[self.flashcardWindowIndex].show()
-
-    def load_ui(self): #automatically created to load the ui
-        loader = QUiLoader()
-        path = os.path.join(os.path.dirname(__file__), "form.ui")
-        ui_file = QFile(path)
-        ui_file.open(QFile.ReadOnly)
-        loader.load(ui_file, self)
-        ui_file.close()
 
     def info(*args): #creates a new dialog window to show the about app section
         info = InfoDialog.InfoDialog()
