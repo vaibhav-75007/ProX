@@ -2,14 +2,18 @@ Main page has a todo list, displaying tasks widgets
 Task widgets have a priority, deadline and name
 Tasks can be added or completed on the home page
 Competing a task will cause the task completion rate to be updated, deadlines missed to be updated and the productivity score to be updated
-There will also be a pomodoro timer widget on the main page
 
-Another widget on the main page will be the scoreboard widget, showing the top ten people overall, their rank and the users place in the scoreboard, and where they are placed
-Clicking on the widget will bring up the scoreboard window, where the entire scoreboard will be shown
+Another widget on the main page will be the scoreboard widget
 
 In the menubar there will be a button to go to the curriculum window, where the user can pick a syllabus or create their own
 They can optionally add a syllabus widget to the homescreen
 
-Add more features here
+Curriculums and flashcards can be created by clicking on their respective buttons in the menubar
 
-All data, such as theme and if optional widgets are toggled on will be stored in a txt file where the program is installed
+/*
+features to add after/bugs to iron out:
+pomodoro timer
+leaderboard refresh
+syncing with multiple computers on one account
+better metrics collection
+*/
