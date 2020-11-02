@@ -20,7 +20,7 @@ from time import sleep
 from Database import DB
 
 class Server:
-    def __init__(self, db_path, idle=10):
+    def __init__(self, db_path, idle=600):
         self.DBPath = db_path  # Path to the JSON file containing the app's database
         
         # Attributes for the idle timer
