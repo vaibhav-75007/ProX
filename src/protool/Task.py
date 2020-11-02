@@ -119,7 +119,8 @@ class ToDoList(QListWidget): #todo list calss
 
         self.takeItem(index) #remove the item, checkbox and the task from the json
         self.checkBoxes.pop(index)
-        tasks.remove(self.tasks[index])
+        self.tasks.remove(self.tasks[index])
+        tasks = self.tasks
         user.user.increase_task_completion_rate(1) #increase task completion rate
         user.user.increase_week_task_completion_rate(1)
 
@@ -143,7 +144,7 @@ class ToDoList(QListWidget): #todo list calss
             return
 
         self.tasks.append(task) #add the task to the list and write to the json
-        tasks.append(task)
+        #tasks.append(task)
         js.writeAll(user.user,curriculum.curriculums,tasks,flash.flashcards)
 
         for j in range(3): #reset the list (not sure why but doing just one iteration doesnt work, requires 3 to remove all tasks)
