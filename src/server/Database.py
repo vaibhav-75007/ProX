@@ -16,6 +16,7 @@ along with ProX.  If not, see <https://www.gnu.org/licenses/>
 '''
 
 import json
+from time import time
 
 class DB:
     def __init__(self, db_path):
@@ -49,6 +50,8 @@ class DB:
             granted_id = 1
         else:
             granted_id = max(self.Users, key=lambda user: user["id"])["id"] + 1
+
+        now = int(time())
         user = dict(
             id = granted_id,
             name = name,
@@ -62,7 +65,9 @@ class DB:
             weekly_deadlines_missed = 0,
             tasks = list(),
             flashcards = list(),
-            curriculums = list()
+            curriculums = list(),
+            last_get = now,
+            last_put = now
         )
         self.Users.append(user)
         self.Ids[granted_id] = len(self.Users) - 1
@@ -72,9 +77,11 @@ class DB:
                 weekly_productivity_score, weekly_task_completion_rate, weekly_deadlines_missed,
                 tasks, flashcards, curriculums):
         """
-        Modify an existing user
+        Modify an existing user then return this user object
         """
-        self.Users[self.Ids[user_id]] = dict(
+        user = self.Users[self.Ids[user_id]]
+        now = int(time())
+        user = dict(
             id = user_id,
             name = name,
             email = email,
@@ -87,8 +94,11 @@ class DB:
             weekly_deadlines_missed = weekly_deadlines_missed,
             tasks = tasks,
             flashcards = flashcards,
-            curriculums = curriculums
+            curriculums = curriculums,
+            last_get = now,
+            last_put = now
         )
+        return user
 
     def DelUser(self, user_id):
         """
@@ -103,7 +113,10 @@ class DB:
         """
         if user_id not in self.Ids:
             raise KeyError(f"User ID #{user_id} not found")
-        return self.Users[self.Ids[user_id]]
+        user = self.Users[self.Ids[user_id]]
+        now = int(time())
+        user["last_get"] = now
+        return user
 
     @staticmethod
     def TypeCheckNewUser(data):
