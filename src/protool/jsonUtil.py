@@ -111,6 +111,21 @@ def mergeChanges(jsonString,offlineJsonString):
 
         if True:
             for task in normalTasks:
+                if task not in dbTasks and task not in offlineTasks:
+                    offlineTasks.remove(task)
+                    normalTasks.remove(task)
+
+            for flashcard in normalFlashcards:
+                if flashcard not in dbFlashcards and flashcard in offlineFlashcards:
+                    offlineFlashcards.remove(flashcard)
+                    normalFlashcards.remove(flashcard)
+
+            for curriculum in normalCurriculums:
+                if curriculum not in dbCurriculums and curriculum in offlineCurriculums:
+                    offlineCurriculums.remove(curriculum)
+                    normalCurriculums.remove(curriculum)
+
+            for task in normalTasks:
                 if task not in offlineTasks and task in dbTasks:
                     dbTasks.remove(task)
                     normalTasks.remove(task)
@@ -170,30 +185,15 @@ def mergeChanges(jsonString,offlineJsonString):
                 normalTasks.append(task)
                 offlineTasks.append(task)
 
-        for task in normalTasks:
-            if task not in dbTasks and task in offlineTasks:
-                offlineTasks.remove(task)
-                normalTasks.remove(task)
-
         for flashcard in dbFlashcards:
             if flashcard not in normalFlashcards:
                 normalFlashcards.append(flashcard)
                 offlineFlashcards.append(flashcard)
 
-        for flashcard in normalFlashcards:
-            if flashcard not in dbFlashcards and flashcard in offlineFlashcards:
-                offlineFlashcards.remove(flashcard)
-                normalFlashcards.remove(flashcard)
-
         for curriculum in dbCurriculums:
             if curriculum not in normalCurriculums:
                 normalCurriculums.append(curriculum)
                 offlineCurriculums.append(curriculum)
-
-        for curriculum in normalCurriculums:
-            if curriculum not in dbCurriculums and curriculum in offlineCurriculums:
-                offlineCurriculums.remove(curriculum)
-                normalCurriculums.remove(curriculum)
         
         score = dbJsonString["task_completion_rate"] - jsonString["task_completion_rate"]
         missed = dbJsonString["missed_deadline"] - jsonString["missed_deadline"]
