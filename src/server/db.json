@@ -1,1 +1,121 @@
-[{"id": 1, "name": "John Doe", "email": "john@gmail.com", "pin": 123456, "productivity_score": 0, "task_completion_rate": 1, "missed_deadline": 1, "weekly_productivity_score": 1, "weekly_task_completion_rate": 1, "weekly_deadlines_missed": 1, "tasks": [{"name": "task 1", "description": "something", "deadline": "2020/10/30 23:59:59"}, {"name": "task 2", "description": "something", "deadline": "2020/10/30 23:59:59"}], "flashcards": [{"subject": "some subject", "front_text": "front", "back_text": "back"}, {"subject": "some subject", "front_text": "front", "back_text": "back"}], "curriculums": [{"name": "Something", "subject": "some subject", "topics": ["topic 1", "topic 2"]}, {"name": "Some other thing", "subject": "some subject", "topics": ["topic 1", "topic 2"]}]}, {"id": 2, "name": "Bill Gates", "email": "bill@microsoft.com", "pin": 654321, "productivity_score": 0, "task_completion_rate": 1, "missed_deadline": 1, "weekly_productivity_score": 1, "weekly_task_completion_rate": 1, "weekly_deadlines_missed": 1, "tasks": [], "flashcards": [], "curriculums": []}, {"id": 3, "name": "vision", "email": "vision@example.com", "pin": 1234, "productivity_score": 1, "task_completion_rate": 4, "missed_deadline": 4, "weekly_productivity_score": 1, "weekly_task_completion_rate": 4, "weekly_deadlines_missed": 4, "tasks": [], "flashcards": [{"subject": "Maths", "front_text": "3+3", "back_text": "6"}, {"subject": "Math", "front_text": "3+2", "back_text": "5"}], "curriculums": [{"name": "GCSE Maths", "subject": "Maths", "topics": ["Number", "Algebra"]}, {"name": "GCSE Science", "subject": "Science", "topics": ["Biology", "Chemistry", "Physics"]}]}]
+[
+    {
+        "id": 1,
+        "name": "John Doe",
+        "email": "john@gmail.com",
+        "pin": 123456,
+        "productivity_score": 0,
+        "task_completion_rate": 1,
+        "missed_deadline": 1,
+        "weekly_productivity_score": 1,
+        "weekly_task_completion_rate": 1,
+        "weekly_deadlines_missed": 1,
+        "tasks": [
+            {
+                "name": "task 1",
+                "description": "something",
+                "deadline": "2020/10/30 23:59:59"
+            },
+            {
+                "name": "task 2",
+                "description": "something",
+                "deadline": "2020/10/30 23:59:59"
+            }
+        ],
+        "flashcards": [
+            {
+                "subject": "some subject",
+                "front_text": "front",
+                "back_text": "back"
+            },
+            {
+                "subject": "some subject",
+                "front_text": "front",
+                "back_text": "back"
+            }
+        ],
+        "curriculums": [
+            {
+                "name": "Something",
+                "subject": "some subject",
+                "topics": [
+                    "topic 1",
+                    "topic 2"
+                ]
+            },
+            {
+                "name": "Some other thing",
+                "subject": "some subject",
+                "topics": [
+                    "topic 1",
+                    "topic 2"
+                ]
+            }
+        ],
+        "last_get": 100000,
+        "last_put": 100000
+    },
+    {
+        "id": 2,
+        "name": "Bill Gates",
+        "email": "bill@microsoft.com",
+        "pin": 654321,
+        "productivity_score": 0,
+        "task_completion_rate": 1,
+        "missed_deadline": 1,
+        "weekly_productivity_score": 1,
+        "weekly_task_completion_rate": 1,
+        "weekly_deadlines_missed": 1,
+        "tasks": [],
+        "flashcards": [],
+        "curriculums": [],
+        "last_get": 100000,
+        "last_put": 100000
+    },
+    {
+        "id": 3,
+        "name": "vision",
+        "email": "vision@example.com",
+        "pin": 1234,
+        "productivity_score": 1,
+        "task_completion_rate": 4,
+        "missed_deadline": 4,
+        "weekly_productivity_score": 1,
+        "weekly_task_completion_rate": 4,
+        "weekly_deadlines_missed": 4,
+        "tasks": [],
+        "flashcards": [
+            {
+                "subject": "Maths",
+                "front_text": "3+3",
+                "back_text": "6"
+            },
+            {
+                "subject": "Math",
+                "front_text": "3+2",
+                "back_text": "5"
+            }
+        ],
+        "curriculums": [
+            {
+                "name": "GCSE Maths",
+                "subject": "Maths",
+                "topics": [
+                    "Number",
+                    "Algebra"
+                ]
+            },
+            {
+                "name": "GCSE Science",
+                "subject": "Science",
+                "topics": [
+                    "Biology",
+                    "Chemistry",
+                    "Physics"
+                ]
+            }
+        ],
+        "last_get": 100000,
+        "last_put": 100000
+    }
+]
