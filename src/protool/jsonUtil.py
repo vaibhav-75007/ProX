@@ -110,18 +110,34 @@ def mergeChanges(jsonString,offlineJsonString):
         normalCurriculums = jsonString["curriculums"]
 
         if True:
+            offlineOnlyTasks = []
+            offlineOnlyFlashcards = []
+            offlineOnlyCurriculums = []
+
+            for task in offlineTasks:
+                if task not in normalTasks:
+                    offlineOnlyTasks.append(task)
+
+            for flashcard in offlineFlashcards:
+                if flashcard not in normalFlashcards:
+                    offlineOnlyFlashcards.append(flashcard)
+
+            for curriculum in offlineCurriculums:
+                if curriculum not in normalCurriculums:
+                    offlineOnlyCurriculums.append(curriculum)
+
             for task in normalTasks:
-                if task not in dbTasks and task not in offlineTasks:
+                if task not in dbTasks and task not in offlineOnlyTasks:
                     offlineTasks.remove(task)
                     normalTasks.remove(task)
 
             for flashcard in normalFlashcards:
-                if flashcard not in dbFlashcards and flashcard in offlineFlashcards:
+                if flashcard not in dbFlashcards and flashcard not in offlineOnlyFlashcards:
                     offlineFlashcards.remove(flashcard)
                     normalFlashcards.remove(flashcard)
 
             for curriculum in normalCurriculums:
-                if curriculum not in dbCurriculums and curriculum in offlineCurriculums:
+                if curriculum not in dbCurriculums and curriculum not in offlineOnlyCurriculums:
                     offlineCurriculums.remove(curriculum)
                     normalCurriculums.remove(curriculum)
 
