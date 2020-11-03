@@ -72,7 +72,7 @@ def writeAll(user,offlineUser1,curriculums,offlineCurriculums1,tasks,offlineTask
     print(offlineJsonString)
 
     try:
-        if requests.get('http://15.237.110.189:5000/').status_code == 200:
+        if requests.get('http://0.0.0.0:54321/').status_code == 200:
             print("merging")
             mergeChanges(jsonString,offlineJsonString)
         else:
@@ -90,7 +90,7 @@ def writeOfflineChanges(jsonString,offlineJsonString):
 
 
 def mergeChanges(jsonString,offlineJsonString):
-    r = requests.get('http://15.237.110.189:5000/' + str(jsonString["id"]) + '/' + str(jsonString["pin"]) + '/')
+    r = requests.get('http://0.0.0.0:54321/' + str(jsonString["id"]) + '/' + str(jsonString["pin"]) + '/')
     dbJsonString = r.json()
     print(dbJsonString)
     print("offline curriculums")
