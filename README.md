@@ -11,6 +11,8 @@ The **theme** of the Code Jam was **"for students"**
 
 This project was built using pyqt5 community edition, an open source gui framework from the Qt Company which you can find at this link: [QT5](https://www.qt.io/)
 
+Download the appropriate executable in the release section of the github page, current release version is v1.0
+
 ### License
 This open source project is under the Gnu General Public license v3.0, you can read it in the [LICENSE](https://github.com/vaibhav-75007/TimathonCodeJamOct/blob/main/LICENSE) file of this repository.
 
