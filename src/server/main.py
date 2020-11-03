@@ -21,7 +21,7 @@ from Server import Server
 from Database import DB
 
 IP = '0.0.0.0'
-PORT = 54321
+PORT = 5000
 DB_PATH = "db.json"
 
 server = Server(DB_PATH)
