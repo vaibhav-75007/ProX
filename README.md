@@ -39,5 +39,5 @@ along with ProX.  If not, see <https://www.gnu.org/licenses/>
 | vaibhav-75007 | [GitHub](https://github.com/vaibhav-75007) |
 | dqtvictory | [GitHub](https://github.com/dqtvictory) |
 | Alfred-Reji | [GitHub](https://github.com/Alfred-Reji) |
-| vision-05| [GitHub](https://github.com/vision-05) |
+| vision-05 | [GitHub](https://github.com/vision-05) |
 ```
