@@ -91,6 +91,8 @@ def writeOfflineChanges(jsonString,offlineJsonString):
 def mergeChanges(jsonString,offlineJsonString):
     r = requests.get('http://15.237.110.189:5000/' + str(jsonString["id"]) + '/' + str(jsonString["pin"]) + '/')
     dbJsonString = r.json()
+    print(dbJsonString)
+    print('\n\n\n')
     #all changes happen to offline user, when a request is made it goes through mergeChanges function rather than writeAll now
 
     if True:
