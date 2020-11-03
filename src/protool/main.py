@@ -127,7 +127,7 @@ QLabel {
 """
 
 def ping():
-    r = requests.get('http://15.237.110.189:5000/')
+    r = requests.get('http://0.0.0.0:54321/')
     print(r.status_code)
 
 def testOnline(): #ping the server 5 times to check if online
@@ -175,7 +175,7 @@ class MainWindow(QMainWindow):
             self.users = [user.offlineUser] #if db offline the leaderboard is just their user
         else:
             try:
-                r = requests.get('http://15.237.110.189:5000/' + str(user.user.id) + '/' + str(user.user.pin) + '/everyone/')
+                r = requests.get('http://0.0.0.0:54321/' + str(user.user.id) + '/' + str(user.user.pin) + '/everyone/')
                 self.users = [user.User(dictionary["name"],dictionary["productivity_score"],dictionary["task_completion_rate"],dictionary["missed_deadline"],dictionary["weekly_productivity_score"],dictionary["weekly_task_completion_rate"],dictionary["weekly_deadlines_missed"],0,0,0) for dictionary in r.json()]
                 self.users.append(user.user) #put all users on the leaderboard
             except TypeError:
@@ -238,7 +238,7 @@ class MainWindow(QMainWindow):
         if testOnline() == False: #user account can only be deleted when online
             print("Db offline")
             return
-        r = requests.delete('http://15.237.110.189:5000/' + str(user.user.id) + '/' + str(user.user.pin) + '/')
+        r = requests.delete('http://0.0.0.0:54321/' + str(user.user.id) + '/' + str(user.user.pin) + '/')
         os.remove("data.json")
         os.remove("date.txt")
         sys.exit()
