@@ -101,16 +101,20 @@ class FirstTimeWindow(QDialog):
         newUser = r.json()
 
         user.user = user.User(idNo=newUser["id"],name=newUser["name"],email=newUser["email"],pin=newUser["pin"],deadlines_missed=0,task_completion_rate=0,productivity_score=0,week_task_completion_rate=0,week_productivity_score=0,week_deadline_missed=0)
+        user.offlineUser = user.User(idNo=newUser["id"],name=newUser["name"],email=newUser["email"],pin=newUser["pin"],deadlines_missed=0,task_completion_rate=0,productivity_score=0,week_task_completion_rate=0,week_productivity_score=0,week_deadline_missed=0)
         flash.flashcards = []
+        flash.offlineFlashcards = []
         task.tasks = []
+        task.offlineTasks = []
         curriculum.curriculums = []
+        curriculum.offlineCurriculums = []
 
         with open("data.json",'wt') as file:
             string = user.user.__dict__()
             string["tasks"] = []
             string["flashcards"] = []
             string["curriculums"] = []
-            file.write(json.dumps(string))
+            file.write(json.dumps([string,string]))
 
         js.writeDateLastOn()
         self.hide()
@@ -125,6 +129,11 @@ class FirstTimeWindow(QDialog):
         flash.flashcards = [flash.FlashCard(subject=tempDict["subject"],front_text=tempDict["front_text"],back_text=tempDict["back_text"]) for tempDict in recoveredUser["flashcards"]]
         curriculum.curriculums = [curriculum.Curriculum(name=tempDict["name"],subject=tempDict["subject"],topics=tempDict["topics"]) for tempDict in recoveredUser["curriculums"]]
 
-        js.writeAll(user.user,curriculum.curriculums,task.tasks,flash.flashcards)
+        user.offlineUser = user.User(idNo=recoveredUser["id"],name=recoveredUser["name"],email=recoveredUser["email"],pin=recoveredUser["pin"],task_completion_rate=recoveredUser["task_completion_rate"],deadlines_missed=recoveredUser["missed_deadline"],productivity_score=0,week_productivity_score=recoveredUser["weekly_productivity_score"],week_deadline_missed=recoveredUser["weekly_deadlines_missed"],week_task_completion_rate=recoveredUser["weekly_task_completion_rate"])
+        task.offlineTasks = [task.Task(name=tempDict["name"],deadline=js.stringToDatetime(tempDict["deadline"]),description=tempDict["description"]) for tempDict in recoveredUser["tasks"]]
+        flash.offlineFlashcards = [flash.FlashCard(subject=tempDict["subject"],front_text=tempDict["front_text"],back_text=tempDict["back_text"]) for tempDict in recoveredUser["flashcards"]]
+        curriculum.offlineCurriculums = [curriculum.Curriculum(name=tempDict["name"],subject=tempDict["subject"],topics=tempDict["topics"]) for tempDict in recoveredUser["curriculums"]]
+
+        js.writeAll(user.user,user.offlineUser,curriculum.curriculums,curriculum.offlineCurriculums,task.tasks,task.offlineTasks,flash.flashcards,flash.offlineFlashcards)
 
         self.close()

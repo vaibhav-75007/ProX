@@ -135,3 +135,4 @@ class LeaderBoard(QListWidget): #list widget to store the users, only refreshes 
         self.show()
 
 user = 0
+offlineUser = 0
