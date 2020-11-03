@@ -79,9 +79,8 @@ class DB:
         """
         Modify an existing user then return this user object
         """
-        user = self.Users[self.Ids[user_id]]
         now = int(time())
-        user = dict(
+        self.Users[self.Ids[user_id]] = dict(
             id = user_id,
             name = name,
             email = email,
@@ -98,6 +97,7 @@ class DB:
             last_get = now,
             last_put = now
         )
+        user = self.Users[self.Ids[user_id]]
         return user
 
     def DelUser(self, user_id):
@@ -154,7 +154,9 @@ class DB:
             weekly_deadlines_missed = int,
             tasks = list,
             flashcards = list,
-            curriculums = list
+            curriculums = list,
+            last_get = int,
+            last_put = int
         )
         task_types = dict(
             name = str,
