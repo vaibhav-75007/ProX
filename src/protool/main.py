@@ -160,12 +160,9 @@ class MainWindow(QMainWindow):
         self.setFixedSize(1200,800)
         self.centralWidget = QWidget()
 
-<<<<<<< HEAD
         if testOnline() == True: #update any offline changes to the database
             js.writeAll(user.user,user.offlineUser,curriculum.curriculums,curriculum.offlineCurriculums,task.tasks,task.offlineTasks,flash.flashcards,flash.offlineFlashcards)
 
-=======
->>>>>>> 52f7bf41dad40d9f6d32aa88bb562a32c86a011d
         self.setCentralWidget(self.centralWidget)
 
         self.spacer = QSpacerItem(100,100)
