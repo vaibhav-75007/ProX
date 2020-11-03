@@ -160,6 +160,9 @@ class MainWindow(QMainWindow):
         self.setFixedSize(1200,800)
         self.centralWidget = QWidget()
 
+        if testOnline() == True: #update any offline changes to the database
+            js.writeAll(user.user,user.offlineUser,curriculum.curriculums,curriculum.offlineCurriculums,task.tasks,task.offlineTasks,flash.flashcards,flash.offlineFlashcards)
+
         self.setCentralWidget(self.centralWidget)
 
         self.spacer = QSpacerItem(100,100)
@@ -203,10 +206,6 @@ class MainWindow(QMainWindow):
         self.flashcards = flash.offlineFlashcards
 
         self.setWindowTitle("ProX")
-
-        #use json addoffline function
-        if testOnline() == True: #update any offline changes to the database
-            js.writeAll(user.user,user.offlineUser,curriculum.curriculums,curriculum.offlineCurriculums,task.tasks,task.offlineTasks,flash.flashcards,flash.offlineFlashcards)
 
     def initMenu(self): #set up the menu bar, with File, syllabi and leaderboard
         self.filemenu = self.menu.addMenu("&File")

@@ -120,7 +120,7 @@ class ToDoList(QListWidget): #todo list calss
         self.takeItem(index) #remove the item, checkbox and the task from the json
         self.checkBoxes.pop(index)
         self.tasks.remove(self.tasks[index])
-        tasks = self.tasks
+        offlineTasks = self.tasks
         user.offlineUser.increase_task_completion_rate(1) #increase task completion rate
         user.offlineUser.increase_week_task_completion_rate(1)
 
