@@ -27,6 +27,30 @@ DB_PATH = "db.json"
 server = Server(DB_PATH)
 api = FlaskAPI("ProX")
 
+
+def check_db_loaded():
+    """
+    Check if DB is loaded into memory (i.e. idling). If not, load DB into memory
+    """
+    if not server.DBLoaded:
+        server.LoadDB()
+
+
+def user_validation(user_id, pin):
+    """
+    Check if user with user_id exists. If yes, check if personal pin matches
+    """
+    # Try querying user with ID user_id
+    try:
+        user = server.DB.QueryUser(user_id)
+    except KeyError as ke:
+        raise exceptions.NotFound(str(ke))
+    
+    # Comparing provided pin with the pin stored in the database
+    if pin != user["pin"]:
+        raise exceptions.AuthenticationFailed("Authentication Failed (User ID and PIN not matched)")
+
+
 @api.route("/", methods=['GET'])
 def ping_server():
     """
@@ -41,20 +65,9 @@ def get_everyone(user_id, pin):
     Get public data from every user for the leaderboard, EXCEPT the user that making the request
     """
     
-    # If DB is not loaded into memory (i.e. idling), load DB first
-    if not server.DBLoaded:
-        server.LoadDB()
-
-    # Try querying user with ID user_id
-    try:
-        user = server.DB.QueryUser(user_id)
-    except KeyError as ke:
-        raise exceptions.NotFound(str(ke))
+    check_db_loaded()
+    user_validation(user_id, pin)
     
-    # Comparing provided pin with the pin stored in the database
-    if pin != user["pin"]:
-        raise exceptions.AuthenticationFailed("Authentication Failed (User ID and PIN not matched)")
-        
     users = list()
     for user in server.DB.Users:
         if user["id"] == user_id:
@@ -74,19 +87,8 @@ def user_request(user_id, pin):
     DELETE: delete a user from the database
     """
 
-    # If DB is not loaded into memory (i.e. idling), load DB first
-    if not server.DBLoaded:
-        server.LoadDB()
-
-    # Try querying user with ID user_id
-    try:
-        user = server.DB.QueryUser(user_id)
-    except KeyError as ke:
-        raise exceptions.NotFound(str(ke))
-    
-    # Comparing provided pin with the pin stored in the database
-    if pin != user["pin"]:
-        raise exceptions.AuthenticationFailed("Authentication Failed (User ID and PIN not matched)")
+    check_db_loaded()
+    user_validation(user_id, pin)
 
     if request.method == 'GET':
         return server.DB.QueryUser(user_id), status.HTTP_200_OK
@@ -97,7 +99,7 @@ def user_request(user_id, pin):
             # Perform type checking on data received
             DB.TypeCheckExistingUser(data)
             # Update the database based on data received
-            server.DB.ModUser(
+            user = server.DB.ModUser(
                 user_id = user_id,
                 name = data["name"],
                 email = data["email"],
@@ -112,13 +114,13 @@ def user_request(user_id, pin):
                 flashcards = data["flashcards"],
                 curriculums = data["curriculums"]
             )
-            return "OK", status.HTTP_202_ACCEPTED
+            return user, status.HTTP_200_OK
         except Exception as e:
             raise exceptions.ParseError(str(e))
 
     elif request.method == 'DELETE':
         server.DB.DelUser(user_id)
-        return "OK", status.HTTP_202_ACCEPTED
+        return "OK", status.HTTP_200_OK
 
 
 @api.route("/new/", methods=['POST'])
@@ -127,9 +129,8 @@ def create_user():
     Handle POST method to create a new user.
     Respond with this new user object
     """
-    # If DB is not loaded into memory (i.e. idling), load DB first
-    if not server.DBLoaded:
-        server.LoadDB()
+
+    check_db_loaded()
 
     data = request.get_json(force = True, silent = True)
     try:
@@ -141,7 +142,7 @@ def create_user():
             email = data["email"],
             pin = data["pin"]
         )
-        return user, status.HTTP_201_CREATED
+        return user, status.HTTP_200_OK
     except Exception as e:
         raise exceptions.ParseError(str(e))
 
@@ -151,9 +152,8 @@ def recover():
     """
     Recover a user object from the email address and PIN number
     """
-    # If DB is not loaded into memory (i.e. idling), load DB first
-    if not server.DBLoaded:
-        server.LoadDB()
+    
+    check_db_loaded()
         
     data = request.get_json(force = True, silent = True)
     
@@ -168,7 +168,7 @@ def recover():
         raise exceptions.NotFound(f"User with email {email} not found")
     elif pin != user["pin"]:
         raise exceptions.AuthenticationFailed("Authentication Failed (Email and PIN not matched)")
-    return user, status.HTTP_202_ACCEPTED
+    return user, status.HTTP_200_OK
 
 
 if __name__ == "__main__":
