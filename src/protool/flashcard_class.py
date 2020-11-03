@@ -272,3 +272,4 @@ class FlashCardDeleteWindow(QMainWindow): #window to delete flashcards
         self.showCard()
 
 flashcards = 0
+offlineFlashcards = 0
