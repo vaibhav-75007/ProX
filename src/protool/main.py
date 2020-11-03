@@ -15,6 +15,11 @@ You should have received a copy of the GNU General Public License
 along with ProX.  If not, see <https://www.gnu.org/licenses/>
 '''
 
+#fix the following:
+#disappearing tasks on close
+#test flashcards, curriculums
+#fix non weekly metrics
+
 # This Python file uses the following encoding: utf-8
 import sys
 import os
@@ -89,6 +94,7 @@ QMenuBar {
 
 QMenuBar::item::selected {
     background-color: #ABABAB;
+    color: white;
 }
 
 QMenu {
@@ -121,12 +127,12 @@ QLabel {
 """
 
 def ping():
-    r = requests.get('http://0.0.0.0:54321/')
+    r = requests.get('http://15.237.110.189:5000/')
     print(r.status_code)
 
 def testOnline(): #ping the server 5 times to check if online
     try:
-        for i in range(5):
+        for i in range(3):
             ping()
         return True
     except requests.exceptions.ConnectionError:
@@ -163,22 +169,22 @@ class MainWindow(QMainWindow):
         self.appended = False
 
         if testOnline() == False:
-            self.users = [user.user] #if db offline the leaderboard is just their user
+            self.users = [user.offlineUser] #if db offline the leaderboard is just their user
         else:
             try:
-                r = requests.get('http://0.0.0.0:54321/' + str(user.user.id) + '/' + str(user.user.pin) + '/everyone/')
-                self.users = [user.User(dictionary["name"],0,dictionary["task_completion_rate"],dictionary["missed_deadline"],dictionary["weekly_productivity_score"],dictionary["weekly_task_completion_rate"],dictionary["weekly_deadlines_missed"],0,0,0) for dictionary in r.json()]
+                r = requests.get('http://15.237.110.189:5000/' + str(user.user.id) + '/' + str(user.user.pin) + '/everyone/')
+                self.users = [user.User(dictionary["name"],dictionary["productivity_score"],dictionary["task_completion_rate"],dictionary["missed_deadline"],dictionary["weekly_productivity_score"],dictionary["weekly_task_completion_rate"],dictionary["weekly_deadlines_missed"],0,0,0) for dictionary in r.json()]
                 self.users.append(user.user) #put all users on the leaderboard
             except TypeError:
                 print("Your user account is not on the database")
-                self.users = [user.user]
+                self.users = [user.offlineUser]
 
         self.leaderboard = user.LeaderBoard(self.users,self)
         self.layout.addWidget(self.leaderboard,0,0,1,2)
 
         self.layout.addItem(self.spacer,0,2,1,1)
 
-        self.tasks = task.tasks
+        self.tasks = task.offlineTasks
         self.todo = task.ToDoList(self.tasks) #create the todo list
         self.layout.addWidget(self.todo,0,3,1,1)
 
@@ -194,13 +200,13 @@ class MainWindow(QMainWindow):
         self.taskInputField.add.connect(self.todo.addTask)
         self.taskInputField.done.released.connect(self.taskInputField.createTask)
 
-        self.flashcards = flash.flashcards
+        self.flashcards = flash.offlineFlashcards
 
         self.setWindowTitle("ProX")
 
+        #use json addoffline function
         if testOnline() == True: #update any offline changes to the database
-            r = requests.put('http://0.0.0.0:54321/' + str(user.user.id) + '/' + str(user.user.pin) + '/',json=js.toJson(user.user,curriculum.curriculums,task.tasks,flash.flashcards))
-            print(r.status_code)
+            js.writeAll(user.user,user.offlineUser,curriculum.curriculums,curriculum.offlineCurriculums,task.tasks,task.offlineTasks,flash.flashcards,flash.offlineFlashcards)
 
     def initMenu(self): #set up the menu bar, with File, syllabi and leaderboard
         self.filemenu = self.menu.addMenu("&File")
@@ -247,8 +253,8 @@ class MainWindow(QMainWindow):
             return
 
         self.flashcards.append(flash.FlashCard(self.creator.subjectInput.text(),self.creator.frontInput.text(),self.creator.backInput.text()))
-        flash.flashcards = self.flashcards #create the new flashcard
-        js.writeAll(user.user,curriculum.curriculums,task.tasks,flash.flashcards)
+        flash.offlineFlashcards = self.flashcards #create the new flashcard
+        js.writeAll(user.user,user.offlineUser,curriculum.curriculums,curriculum.offlineCurriculums,task.tasks,task.offlineTasks,flash.flashcards,flash.offlineFlashcards)
 
         for flashcardWindow in self.flashcardWindows:
             flashcardWindow.create.triggered.disconnect(self.inputFlashcardInfo) #reset the flashcard windows
@@ -270,16 +276,16 @@ class MainWindow(QMainWindow):
 
     def removeFlashcard(self):
         self.flashcards.pop(self.deleter.index) #remove the flashcards from the json and flashcard list
-        js.writeAll(user.user,curriculum.curriculums,task.tasks,flash.flashcards)
+        js.writeAll(user.user,user.offlineUser,curriculum.curriculums,curriculum.offlineCurriculums,tasks,offlineTasks,flash.flashcards,flash.offlineFlashcards)
         self.deleter.close() #close the deleter
         self.makeFlashCardWindows(self.flashcards) #reset the flashcard windows
 
     def makeFlashCardWindows(self,flashcards):
         self.flashcardWindowIndex = 0
         self.flashcardWindows = []
-        if len(flash.flashcards) == 0: #if there are no flashcards prompt user to create them
+        if len(flash.offlineFlashcards) == 0: #if there are no flashcards prompt user to create them
             self.inputFlashcardInfo()
-            if len(flash.flashcards) == 0: #if user doesnt make flashcards exit the window
+            if len(flash.offlineFlashcards) == 0: #if user doesnt make flashcards exit the window
                 return
 
         flashcards = flash.sortFlashcards(flashcards) #sort the flashcards by subject
@@ -310,14 +316,6 @@ class MainWindow(QMainWindow):
         else:
             self.flashcardWindowIndex = len(self.flashcardWindows) - 1
         self.flashcardWindows[self.flashcardWindowIndex].show()
-
-    def load_ui(self): #automatically created to load the ui
-        loader = QUiLoader()
-        path = os.path.join(os.path.dirname(__file__), "form.ui")
-        ui_file = QFile(path)
-        ui_file.open(QFile.ReadOnly)
-        loader.load(ui_file, self)
-        ui_file.close()
 
     def info(*args): #creates a new dialog window to show the about app section
         info = InfoDialog.InfoDialog()

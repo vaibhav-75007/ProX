@@ -96,28 +96,32 @@ class FirstTimeWindow(QDialog):
 
         data = {"name":str(self.signupUsername.text()),"email":str(self.signupEmail.text()),"pin":self.pin}
 
-        r = requests.post('http://0.0.0.0:54321/new/',json=data)
+        r = requests.post('http://15.237.110.189:5000/new/',json=data)
         print(r.status_code)
         newUser = r.json()
 
         user.user = user.User(idNo=newUser["id"],name=newUser["name"],email=newUser["email"],pin=newUser["pin"],deadlines_missed=0,task_completion_rate=0,productivity_score=0,week_task_completion_rate=0,week_productivity_score=0,week_deadline_missed=0)
+        user.offlineUser = user.User(idNo=newUser["id"],name=newUser["name"],email=newUser["email"],pin=newUser["pin"],deadlines_missed=0,task_completion_rate=0,productivity_score=0,week_task_completion_rate=0,week_productivity_score=0,week_deadline_missed=0)
         flash.flashcards = []
+        flash.offlineFlashcards = []
         task.tasks = []
+        task.offlineTasks = []
         curriculum.curriculums = []
+        curriculum.offlineCurriculums = []
 
         with open("data.json",'wt') as file:
             string = user.user.__dict__()
             string["tasks"] = []
             string["flashcards"] = []
             string["curriculums"] = []
-            file.write(json.dumps(string))
+            file.write(json.dumps([string,string]))
 
         js.writeDateLastOn()
         self.hide()
 
     def login(self): #for recovering from an existing account
         data = {"pin":int(self.loginPassword.text()),"email":self.loginUsername.text()}
-        r = requests.get('http://0.0.0.10:54321/recover/',json=data)
+        r = requests.get('http://15.237.110.189:5000/recover/',json=data)
         print(r.status_code)
         recoveredUser = r.json()
         user.user = user.User(idNo=recoveredUser["id"],name=recoveredUser["name"],email=recoveredUser["email"],pin=recoveredUser["pin"],task_completion_rate=recoveredUser["task_completion_rate"],deadlines_missed=recoveredUser["missed_deadline"],productivity_score=0,week_productivity_score=recoveredUser["weekly_productivity_score"],week_deadline_missed=recoveredUser["weekly_deadlines_missed"],week_task_completion_rate=recoveredUser["weekly_task_completion_rate"])
@@ -125,6 +129,11 @@ class FirstTimeWindow(QDialog):
         flash.flashcards = [flash.FlashCard(subject=tempDict["subject"],front_text=tempDict["front_text"],back_text=tempDict["back_text"]) for tempDict in recoveredUser["flashcards"]]
         curriculum.curriculums = [curriculum.Curriculum(name=tempDict["name"],subject=tempDict["subject"],topics=tempDict["topics"]) for tempDict in recoveredUser["curriculums"]]
 
-        js.writeAll(user.user,curriculum.curriculums,task.tasks,flash.flashcards)
+        user.offlineUser = user.User(idNo=recoveredUser["id"],name=recoveredUser["name"],email=recoveredUser["email"],pin=recoveredUser["pin"],task_completion_rate=recoveredUser["task_completion_rate"],deadlines_missed=recoveredUser["missed_deadline"],productivity_score=0,week_productivity_score=recoveredUser["weekly_productivity_score"],week_deadline_missed=recoveredUser["weekly_deadlines_missed"],week_task_completion_rate=recoveredUser["weekly_task_completion_rate"])
+        task.offlineTasks = [task.Task(name=tempDict["name"],deadline=js.stringToDatetime(tempDict["deadline"]),description=tempDict["description"]) for tempDict in recoveredUser["tasks"]]
+        flash.offlineFlashcards = [flash.FlashCard(subject=tempDict["subject"],front_text=tempDict["front_text"],back_text=tempDict["back_text"]) for tempDict in recoveredUser["flashcards"]]
+        curriculum.offlineCurriculums = [curriculum.Curriculum(name=tempDict["name"],subject=tempDict["subject"],topics=tempDict["topics"]) for tempDict in recoveredUser["curriculums"]]
+
+        js.writeAll(user.user,user.offlineUser,curriculum.curriculums,curriculum.offlineCurriculums,task.tasks,task.offlineTasks,flash.flashcards,flash.offlineFlashcards)
 
         self.close()

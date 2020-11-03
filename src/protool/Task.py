@@ -114,23 +114,24 @@ class ToDoList(QListWidget): #todo list calss
             return
 
         if self.tasks[index].isOverdue: #if task is overdue increase the deadlines missed by one
-            user.user.increase_deadlines_missed(1)
-            user.user.increase_week_deadline_missed(1)
+            user.offlineUser.increase_deadlines_missed(1)
+            user.offlineUser.increase_week_deadline_missed(1)
 
         self.takeItem(index) #remove the item, checkbox and the task from the json
         self.checkBoxes.pop(index)
-        tasks.remove(self.tasks[index])
-        user.user.increase_task_completion_rate(1) #increase task completion rate
-        user.user.increase_week_task_completion_rate(1)
+        self.tasks.remove(self.tasks[index])
+        tasks = self.tasks
+        user.offlineUser.increase_task_completion_rate(1) #increase task completion rate
+        user.offlineUser.increase_week_task_completion_rate(1)
 
-        user.user.productivity_score = calcProScore(user.user.task_completion_rate,user.user.deadlines_missed) #recalculate productivity metrics
-        user.user.week_productivity_score = calcProScore(user.user.week_task_completion_rate,user.user.week_deadline_missed)
+        user.offlineUser.productivity_score = calcProScore(user.user.task_completion_rate,user.user.deadlines_missed) #recalculate productivity metrics
+        user.offlineUser.week_productivity_score = calcProScore(user.user.week_task_completion_rate,user.user.week_deadline_missed)
 
         if len(tasks) == 0: #make sure to end function if tasks are empty to avoid array out of bounds errors
-            js.writeAll(user.user,curriculum.curriculums,tasks,flash.flashcards)
+            js.writeAll(user.user,user.offlineUser,curriculum.curriculums,curriculum.offlineCurriculums,tasks,offlineTasks,flash.flashcards,flash.offlineFlashcards)
             return
 
-        js.writeAll(user.user,curriculum.curriculums,tasks,flash.flashcards) #rewrite to json and db if online
+        js.writeAll(user.user,user.offlineUser,curriculum.curriculums,curriculum.offlineCurriculums,tasks,offlineTasks,flash.flashcards,flash.offlineFlashcards) #rewrite to json and db if online
 
         for i in range(self.count()): #reconnect the checkboxes
             self.checkBoxes[i].stateChanged.connect(self.removeTask)
@@ -138,13 +139,18 @@ class ToDoList(QListWidget): #todo list calss
         return
 
     @Slot(Task) #this function takes a task parameter
-    def addTask(self,task):    
+    def addTask(self,task):
         if task.name == "" or task.description == "": #presence check
             return
 
+        length = len(offlineTasks)
+
         self.tasks.append(task) #add the task to the list and write to the json
-        tasks.append(task)
-        js.writeAll(user.user,curriculum.curriculums,tasks,flash.flashcards)
+        offlineTasks.append(task)
+        if len(offlineTasks) > length + 1:
+            offlineTasks.pop(length + 1)
+        print(offlineTasks)
+        js.writeAll(user.user,user.offlineUser,curriculum.curriculums,curriculum.offlineCurriculums,tasks,offlineTasks,flash.flashcards,flash.offlineFlashcards)
 
         for j in range(3): #reset the list (not sure why but doing just one iteration doesnt work, requires 3 to remove all tasks)
             for i in range(self.count()):
@@ -244,6 +250,7 @@ class TaskInputFieldWidget(QWidget):
         self.add.emit(task) #put task in todo list
 
 tasks = 0
+offlineTasks = 0
 
 def calcProScore(taskCompletion,missedDeadlines): #productivity score is taskCompletion / missedDeadline converted to an int
     if missedDeadlines == 0:

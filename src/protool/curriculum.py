@@ -129,7 +129,7 @@ class CurriculumWindow(QMainWindow):
         self.centralWidget = QWidget()
         self.setCentralWidget(self.centralWidget)
 
-        self.curriculums = curriculums
+        self.curriculums = offlineCurriculums
 
         self.layout = QVBoxLayout(self.centralWidget)
         self.stack = QStackedWidget()
@@ -266,3 +266,4 @@ class TopicListWidgetItem(QListWidgetItem):
         self.setText(name)
 
 curriculums = 0
+offlineCurriculums = 0
