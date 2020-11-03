@@ -32,6 +32,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with ProX.  If not, see <https://www.gnu.org/licenses/>
+```
 
 ### Contributors
 | Name | Social media links |
@@ -40,4 +41,3 @@ along with ProX.  If not, see <https://www.gnu.org/licenses/>
 | dqtvictory | [GitHub](https://github.com/dqtvictory) |
 | Alfred-Reji | [GitHub](https://github.com/Alfred-Reji) |
 | vision-05 | [GitHub](https://github.com/vision-05) |
-```
