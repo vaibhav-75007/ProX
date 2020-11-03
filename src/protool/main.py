@@ -279,7 +279,8 @@ class MainWindow(QMainWindow):
 
     def removeFlashcard(self):
         self.flashcards.pop(self.deleter.index) #remove the flashcards from the json and flashcard list
-        js.writeAll(user.user,user.offlineUser,curriculum.curriculums,curriculum.offlineCurriculums,tasks,offlineTasks,flash.flashcards,flash.offlineFlashcards)
+        flash.offlineFlashcards = self.flashcards
+        js.writeAll(user.user,user.offlineUser,curriculum.curriculums,curriculum.offlineCurriculums,task.tasks,task.offlineTasks,flash.flashcards,flash.offlineFlashcards)
         self.deleter.close() #close the deleter
         self.makeFlashCardWindows(self.flashcards) #reset the flashcard windows
 

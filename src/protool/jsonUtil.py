@@ -66,6 +66,7 @@ def readAll():
 def writeAll(user,offlineUser1,curriculums,offlineCurriculums1,tasks,offlineTasks1,flashcards,offlineFlashcards1):
     jsonString = toJson(user,curriculums,tasks,flashcards)
     print(offlineTasks1)
+    print(offlineCurriculums1)
     offlineJsonString = toJson(offlineUser1,offlineCurriculums1,offlineTasks1,offlineFlashcards1)
 
     print(offlineJsonString)
@@ -92,6 +93,8 @@ def mergeChanges(jsonString,offlineJsonString):
     r = requests.get('http://15.237.110.189:5000/' + str(jsonString["id"]) + '/' + str(jsonString["pin"]) + '/')
     dbJsonString = r.json()
     print(dbJsonString)
+    print("offline curriculums")
+    print(offlineJsonString["curriculums"])
     print('\n\n\n')
     #all changes happen to offline user, when a request is made it goes through mergeChanges function rather than writeAll now
 
@@ -126,6 +129,8 @@ def mergeChanges(jsonString,offlineJsonString):
                 if curriculum not in normalCurriculums:
                     offlineOnlyCurriculums.append(curriculum)
 
+
+
             for task in normalTasks:
                 if task not in dbTasks and task not in offlineOnlyTasks:
                     offlineTasks.remove(task)
@@ -141,20 +146,43 @@ def mergeChanges(jsonString,offlineJsonString):
                     offlineCurriculums.remove(curriculum)
                     normalCurriculums.remove(curriculum)
 
+
+
             for task in normalTasks:
                 if task not in offlineTasks and task in dbTasks:
                     dbTasks.remove(task)
                     normalTasks.remove(task)
-                    print(dbTasks)
-                    print(offlineTasks)
-                    print(normalTasks)
-                    print("removing task")
+
+            #fix this part
+            print(f'offline curriculums: {offlineCurriculums} \n\n\n')
+            print(f'db curriculums: {dbCurriculums} \n\n\n')
+            print(f'normal curriculums: {normalCurriculums} \n\n\n')
+
+            for flashcard in normalFlashcards:
+                if flashcard not in offlineFlashcards and flashcard in dbFlashcards:
+                    dbFlashcards.remove(flashcard)
+                    normalFlashcards.remove(flashcard)
+                    print("db remove")
+                    print(flashcard)
+                    print("\n\n\n")
+
+            for curriculum in normalCurriculums:
+                if curriculum not in offlineCurriculums and curriculum in dbCurriculums:
+                    dbCurriculums.remove(curriculum)
+                    normalCurriculums.remove(curriculum)
+                    print("db remove")
+                    print(curriculum)
+                    print("\n\n\n")
+
+            #print(f'offline flashcards: {offlineFlashcards} \n\n\n')
+            #print(f'db flashcards: {dbFlashcards} \n\n\n')
+            #print(f'normal flashcards {normalFlashcards} \n\n\n')
+            print(f'offline curriculums: {offlineCurriculums} \n\n\n')
+            print(f'db curriculums: {dbCurriculums} \n\n\n')
+            print(f'normal curriculums: {normalCurriculums} \n\n\n')
 
             dbJsonString["task_completion_rate"] += score
             dbJsonString["missed_deadline"] += missed
-
-            print(offlineTasks)
-            print(dbTasks)
             
             for task in offlineTasks:
                 if task not in normalTasks and task not in dbTasks:
@@ -162,13 +190,6 @@ def mergeChanges(jsonString,offlineJsonString):
                     normalTasks.append(task)
                 elif task not in dbTasks:
                     dbTasks.append(task)
-                    print("adding task")
-                    print(dbTasks)
-
-            for curriculum in normalCurriculums:
-                if curriculum not in offlineCurriculums and curriculum in dbCurriculums:
-                    dbCurriculums.remove(curriculum)
-                    normalCurriculum.remove(curriculum)
 
             for curriculum in offlineCurriculums:
                 if curriculum not in normalCurriculums and curriculum not in dbCurriculums:
@@ -177,17 +198,18 @@ def mergeChanges(jsonString,offlineJsonString):
                 elif curriculum not in dbCurriculums:
                     dbCurriculums.append(curriculum)
 
-            for flashcard in normalFlashcards:
-                if flashcard not in offlineFlashcards and flashcard in dbFlashcards:
-                    dbFlashcards.remove(flashcard)
-                    normalFlashcards.remove(flashcard)
-
             for flashcard in offlineFlashcards:
                 if flashcard not in normalFlashcards and flashcard not in dbFlashcards:
                     dbFlashcards.append(flashcard)
                     normalFlashcards.append(flashcard)
                 elif flashcard not in dbFlashcards:
                     dbFlashcards.append(flashcard)
+
+            print(f'offline flashcards: {offlineFlashcards} \n\n\n')
+            print(f'db flashcards: {dbFlashcards} \n\n\n')
+            print(f'offline curriculums: {offlineCurriculums} \n\n\n')
+            print(f'db curriculums: {dbCurriculums} \n\n\n')
+            print(f'offline tasks: {offlineTasks} \n\n\n')
 
             jsonString["productivity_score"] = copy.deepcopy(offlineJsonString["productivity_score"])
             jsonString["weekly_productivity_score"] = copy.deepcopy(offlineJsonString["weekly_productivity_score"])
@@ -210,6 +232,9 @@ def mergeChanges(jsonString,offlineJsonString):
             if curriculum not in normalCurriculums:
                 normalCurriculums.append(curriculum)
                 offlineCurriculums.append(curriculum)
+
+        print(f'offline flashcards: {offlineFlashcards} \n\n\n')
+        print(f'offline curriculums: {offlineCurriculums} \n\n\n')
         
         score = dbJsonString["task_completion_rate"] - jsonString["task_completion_rate"]
         missed = dbJsonString["missed_deadline"] - jsonString["missed_deadline"]

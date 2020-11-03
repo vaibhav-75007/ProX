@@ -204,9 +204,13 @@ class CurriculumWindow(QMainWindow):
         self.deleter.confirm.released.connect(self.deleteCurriculum)
 
     def deleteCurriculum(self):
-        curriculums.pop(self.deleter.index) #just remove the widget from the stack and the curriculum from the list
+        self.curriculums.pop(self.deleter.index) #just remove the widget from the stack and the curriculum from the list
+        offlineCurriculums = self.curriculums
         self.stack.removeWidget(self.stack.widget(self.deleter.index))
-        js.writeAll(user.user,curriculums,task.tasks,flash.flashcards) #update changes
+        print("deleting curriculum")
+        print(offlineCurriculums)
+        print('\n\n')
+        js.writeAll(user.user,user.offlineUser,curriculums,offlineCurriculums,task.tasks,task.offlineTasks,flash.flashcards,flash.offlineFlashcards) #update changes
         self.deleter.close()
         if self.stack.count() > 0:
             self.stack.setCurrentIndex(0)
@@ -227,7 +231,7 @@ class CurriculumWindow(QMainWindow):
 
         self.creator.topicsInput = [QLineEdit()] #reset the list of lineedits
 
-        js.writeAll(user.user,curriculums,task.tasks,flash.flashcards) #write to json
+        js.writeAll(user.user,user.offlineUser,curriculums,offlineCurriculums,task.tasks,task.offlineTasks,flash.flashcards,flash.offlineFlashcards) #write to json
         if self.stack.count() > 0:
             self.stack.setCurrentIndex(0)
         else:
