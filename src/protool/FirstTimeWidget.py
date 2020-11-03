@@ -134,8 +134,11 @@ class FirstTimeWindow(QDialog):
         flash.offlineFlashcards = [flash.FlashCard(subject=tempDict["subject"],front_text=tempDict["front_text"],back_text=tempDict["back_text"]) for tempDict in recoveredUser["flashcards"]]
         curriculum.offlineCurriculums = [curriculum.Curriculum(name=tempDict["name"],subject=tempDict["subject"],topics=tempDict["topics"]) for tempDict in recoveredUser["curriculums"]]
 
+<<<<<<< HEAD
         print(recoveredUser)
 
+=======
+>>>>>>> 52f7bf41dad40d9f6d32aa88bb562a32c86a011d
         js.writeAll(user.user,user.offlineUser,curriculum.curriculums,curriculum.offlineCurriculums,task.tasks,task.offlineTasks,flash.flashcards,flash.offlineFlashcards)
 
         self.close()

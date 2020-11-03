@@ -110,6 +110,7 @@ def mergeChanges(jsonString,offlineJsonString):
         normalCurriculums = jsonString["curriculums"]
 
         if True:
+<<<<<<< HEAD
             offlineOnlyTasks = []
             offlineOnlyFlashcards = []
             offlineOnlyCurriculums = []
@@ -141,6 +142,8 @@ def mergeChanges(jsonString,offlineJsonString):
                     offlineCurriculums.remove(curriculum)
                     normalCurriculums.remove(curriculum)
 
+=======
+>>>>>>> 52f7bf41dad40d9f6d32aa88bb562a32c86a011d
             for task in normalTasks:
                 if task not in offlineTasks and task in dbTasks:
                     dbTasks.remove(task)
@@ -201,15 +204,39 @@ def mergeChanges(jsonString,offlineJsonString):
                 normalTasks.append(task)
                 offlineTasks.append(task)
 
+<<<<<<< HEAD
+=======
+        for task in normalTasks:
+            if task not in dbTasks and task in offlineTasks:
+                offlineTasks.remove(task)
+                normalTasks.remove(task)
+
+>>>>>>> 52f7bf41dad40d9f6d32aa88bb562a32c86a011d
         for flashcard in dbFlashcards:
             if flashcard not in normalFlashcards:
                 normalFlashcards.append(flashcard)
                 offlineFlashcards.append(flashcard)
 
+<<<<<<< HEAD
+=======
+        for flashcard in normalFlashcards:
+            if flashcard not in dbFlashcards and flashcard in offlineFlashcards:
+                offlineFlashcards.remove(flashcard)
+                normalFlashcards.remove(flashcard)
+
+>>>>>>> 52f7bf41dad40d9f6d32aa88bb562a32c86a011d
         for curriculum in dbCurriculums:
             if curriculum not in normalCurriculums:
                 normalCurriculums.append(curriculum)
                 offlineCurriculums.append(curriculum)
+<<<<<<< HEAD
+=======
+
+        for curriculum in normalCurriculums:
+            if curriculum not in dbCurriculums and curriculum in offlineCurriculums:
+                offlineCurriculums.remove(curriculum)
+                normalCurriculums.remove(curriculum)
+>>>>>>> 52f7bf41dad40d9f6d32aa88bb562a32c86a011d
         
         score = dbJsonString["task_completion_rate"] - jsonString["task_completion_rate"]
         missed = dbJsonString["missed_deadline"] - jsonString["missed_deadline"]
