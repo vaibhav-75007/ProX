@@ -96,7 +96,7 @@ class FirstTimeWindow(QDialog):
 
         data = {"name":str(self.signupUsername.text()),"email":str(self.signupEmail.text()),"pin":self.pin}
 
-        r = requests.post('http://15.237.110.189:5000/new/',json=data)
+        r = requests.post('http://0.0.0.0:54321/new/',json=data)
         print(r.status_code)
         newUser = r.json()
 
@@ -121,7 +121,7 @@ class FirstTimeWindow(QDialog):
 
     def login(self): #for recovering from an existing account
         data = {"pin":int(self.loginPassword.text()),"email":self.loginUsername.text()}
-        r = requests.get('http://15.237.110.189:5000/recover/',json=data)
+        r = requests.get('http://0.0.0.0:54321/recover/',json=data)
         print(r.status_code)
         recoveredUser = r.json()
         user.user = user.User(idNo=recoveredUser["id"],name=recoveredUser["name"],email=recoveredUser["email"],pin=recoveredUser["pin"],task_completion_rate=recoveredUser["task_completion_rate"],deadlines_missed=recoveredUser["missed_deadline"],productivity_score=0,week_productivity_score=recoveredUser["weekly_productivity_score"],week_deadline_missed=recoveredUser["weekly_deadlines_missed"],week_task_completion_rate=recoveredUser["weekly_task_completion_rate"])
